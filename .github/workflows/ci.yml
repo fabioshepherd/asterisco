@@ -21,6 +21,11 @@ permissions:
 
 jobs:
   frontend:
+    needs: changes
+    # Fail-safe: runs unless `changes` positively said "docs only". If `changes`
+    # fails, its outputs are empty and this job still runs (a job skipped because
+    # a needed job failed would otherwise report success).
+    if: ${{ !cancelled() && needs.changes.outputs.docs_only != 'true' }}
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
@@ -34,6 +39,8 @@ jobs:
       - run: bun run test
 
   e2e:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.docs_only != 'true' }}
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
@@ -51,16 +58,25 @@ jobs:
           path: playwright-report
           retention-days: 7
 
-  # Decides whether `rust` runs. On a pull request it runs only when the
-  # pull request changes src-tauri/ or a workflow; on pushes to main and manual
-  # runs it always runs. A job skipped by `if:` reports success, so `rust` stays
-  # usable as a required check (a workflow skipped by `paths:` would stay
-  # pending instead).
+  # Decides which jobs run. A job skipped by `if:` reports success, so the
+  # gated jobs stay usable as required checks (a workflow skipped by `paths:`
+  # would leave them pending instead). On pushes to main and manual runs
+  # everything runs. On a pull request:
+  # - `rust` runs only when the pull request changes src-tauri/ or a workflow;
+  # - `frontend`, `e2e` and `rust` are skipped when EVERY changed file is
+  #   documentation, i.e. matches DOCS_ONLY: a Markdown file at the repository
+  #   root, a Markdown file or image (svg, png, jpg, jpeg, gif, webp) under
+  #   docs/, or the root THIRD-PARTY-NOTICES. Anything else (src/, src-tauri/,
+  #   e2e/, public/, scripts/, .github/, config files, lockfiles, LICENSE, which
+  #   the bundle packages) runs everything. `--no-renames` lists both sides of a
+  #   rename, so moving code into docs/ is not docs-only; unusual paths come out
+  #   quoted and never match. Keep DOCS_ONLY in sync with build-check.yml.
   changes:
     runs-on: ubuntu-22.04
     timeout-minutes: 5
     outputs:
       rust: ${{ steps.diff.outputs.rust }}
+      docs_only: ${{ steps.diff.outputs.docs_only }}
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
         with:
@@ -70,21 +86,32 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           BASE_REF: ${{ github.base_ref }}
+          DOCS_ONLY: '^([^/]+\.md|docs/([^/]+/)*[^/]+\.(md|svg|png|jpe?g|gif|webp)|THIRD-PARTY-NOTICES)$'
         run: |
           if [ "$EVENT_NAME" != "pull_request" ]; then
             echo "rust=true" >> "$GITHUB_OUTPUT"
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          files=$(git diff --name-only "origin/$BASE_REF...HEAD")
-          if printf '%s\n' "$files" | grep -qE '^(src-tauri/|\.github/workflows/)'; then
+          files=$(git diff --name-only --no-renames "origin/$BASE_REF...HEAD")
+          # Indented so a file name cannot be read as a workflow command (::...).
+          echo "Changed files:"
+          sed 's/^/  /' <<< "$files"
+          if grep -qE '^(src-tauri/|\.github/workflows/)' <<< "$files"; then
             echo "rust=true" >> "$GITHUB_OUTPUT"
           else
             echo "rust=false" >> "$GITHUB_OUTPUT"
           fi
+          if [ -n "$files" ] && ! grep -qvE "$DOCS_ONLY" <<< "$files"; then
+            echo "docs_only=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"
+          fi
 
   rust:
     needs: changes
-    if: needs.changes.outputs.rust == 'true'
+    # Fail-safe like `frontend`: skipped only on an explicit "false".
+    if: ${{ !cancelled() && needs.changes.outputs.rust != 'false' }}
     runs-on: ubuntu-22.04
     timeout-minutes: 30
     steps:
