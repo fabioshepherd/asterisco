@@ -28,7 +28,7 @@ Priorities: **[Core]** shipped in the MVP · **[V1]** required for 1.0 ·
 |---|---|---|
 | 0 — Scaffold | Tauri 2 + React + TS + Vite, design tokens and theming, base Rust fs commands, persisted window state, native menus, i18n | **done** |
 | 1 — MVP | Seamless WYSIWYG, full GFM, code blocks, tables, open/save, auto-save, file watcher, command palette, find & replace, word count, HTML export and print, file tree, tabs | **done** |
-| 2 — V1.0 | Everything below under "Remaining for 1.0" | **done** except the release gates below: the public repository and the platform release smoke test |
+| 2 — V1.0 | Everything below under "Remaining for 1.0" | **done**; the last release gate, the device smoke test of `app-v1.0.0-rc.1`, runs before the `app-v1.0.0` tag |
 | 3 — Plus | Slash commands, snippets, multi-cursor, sessions and pins, advanced statistics, visual theme editor, Pandoc, image assistant, light Git integration, Vim mode | not started |
 | 4 — Future | Opt-in AI assistant, real-time collaboration (Yjs), wiki-links and backlinks, plugin system, mobile builds | not started |
 
@@ -57,7 +57,7 @@ themselves were never closed, so they are restated here and live here now.
   welcome document, binary `asterisco`, identifier `it.fabiopastore.asterisco`,
   internal storage keys, the updater endpoint on `fabioshepherd/asterisco`, the
   logo, the app icons and the About dialog.
-- **[V1] Publish from a public repository.** Release downloads and the updater
+- **[V1] Publish from a public repository — closed 2026-11-22.** Release downloads and the updater
   need a public repository. Decided 2026-11-20: the cleaned tree becomes the
   first commit of a new public `fabioshepherd/asterisco`, with `main` protected
   by a ruleset (pull requests only, required checks `frontend`, `e2e`, `rust`,
@@ -66,9 +66,9 @@ themselves were never closed, so they are restated here and live here now.
 - **[V1] Smoke-test a real release on each platform.** Decided 2026-08-17:
   macOS ships unsigned, so the matrix now builds all five declared bundle
   targets across four jobs and nothing in `tauri.conf.json` goes unbuilt. What
-  is untested is the output — no tag has been cut since, so the Linux and macOS
-  bundles have never been installed and opened. Cut a pre-release tag and run
-  `docs/RELEASING.md`'s smoke test on each before calling distribution done.
+  is untested is the output. `app-v1.0.0-rc.1` was cut on 2026-11-22 for this:
+  run the device checklist in `docs/release-1.0.md` on its bundles before
+  tagging `app-v1.0.0`.
 
 ### Quality gates
 

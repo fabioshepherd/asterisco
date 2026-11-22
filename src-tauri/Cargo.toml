@@ -1,6 +1,6 @@
 [package]
 name = "asterisco"
-version = "1.0.0-rc.1"
+version = "1.0.0"
 description = "A native, local-first Markdown editor"
 authors = ["Fabio Pastore"]
 license = "MIT"
