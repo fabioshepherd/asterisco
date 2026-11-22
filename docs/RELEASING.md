@@ -52,22 +52,47 @@ creates a draft; publish it after verifying.
 
 > **The first build ships UNSIGNED on macOS — this is a deliberate, deferred
 > decision.** Until the maintainer provisions an Apple Developer ID certificate
-> and notarization credentials (the secrets in the [table below](#3-macos-code-signing--notarization-optional)),
-> Gatekeeper will quarantine the downloaded `.app`/`.dmg` and show a
-> **"app is damaged and can't be opened"** (or "unidentified developer")
-> warning. Users can still run it via right-click → **Open**, or
-> `xattr -dr com.apple.quarantine <App>.app`. Provisioning Developer ID +
-> notarization removes the warning; it is not required for the first release.
+> and notarization credentials (the steps below), Gatekeeper quarantines the
+> downloaded app and refuses the first open. What users do about it is in
+> [What users see from an unsigned build](#what-users-see-from-an-unsigned-build).
+> Provisioning Developer ID + notarization removes the warning; it is not
+> required for the first release.
 
-Add these repo secrets (see the Tauri docs for creating the cert/API key):
+`release.yml` already carries the signing and notarization path; it stays off
+until the repository variable `ENABLE_MAC_SIGNING` is `true`. Nothing in the
+code or the workflow changes when signing is turned on.
 
-| Secret | Purpose |
-|--------|---------|
-| `APPLE_CERTIFICATE` | base64 of your Developer ID `.p12` |
-| `APPLE_CERTIFICATE_PASSWORD` | `.p12` password |
-| `APPLE_SIGNING_IDENTITY` | e.g. `Developer ID Application: …` |
-| `APPLE_ID`, `APPLE_PASSWORD`, `APPLE_TEAM_ID` | notarization (app-specific password) |
-| `KEYCHAIN_PASSWORD` | any value (CI keychain) |
+1. **Join the Apple Developer Program** (paid, yearly; enrol as an individual
+   with an Apple ID that has two-factor authentication). Only Apple issues
+   Developer ID certificates; there is no free route.
+2. **Create a Developer ID Application certificate** — this needs a Mac:
+   - Keychain Access → Certificate Assistant → *Request a Certificate From a
+     Certificate Authority…*, saved to disk.
+   - developer.apple.com → Certificates → **+** → **Developer ID
+     Application**, upload the request, download the `.cer` and open it.
+   - In Keychain Access, export the certificate **with its private key** as a
+     `.p12`, protected by a password, then copy it as base64:
+     `base64 -i certificate.p12 | pbcopy`.
+3. **Create the notarization credentials:** an app-specific password at
+   appleid.apple.com (Sign-In and Security → App-Specific Passwords), and note
+   the Team ID from developer.apple.com → Membership.
+4. **Add the repository secrets** (Settings → Secrets and variables → Actions →
+   Secrets). The maintainer adds them; they are never pasted anywhere else.
+
+   | Secret | Value |
+   |--------|-------|
+   | `APPLE_CERTIFICATE` | base64 of the Developer ID `.p12` |
+   | `APPLE_CERTIFICATE_PASSWORD` | the `.p12` password |
+   | `APPLE_SIGNING_IDENTITY` | `Developer ID Application: <Name> (<TEAMID>)` |
+   | `APPLE_ID` | the Apple ID email |
+   | `APPLE_PASSWORD` | the app-specific password |
+   | `APPLE_TEAM_ID` | the Team ID |
+   | `KEYCHAIN_PASSWORD` | any value (the CI keychain) |
+
+5. **Turn it on:** in the same page, tab **Variables**, set
+   `ENABLE_MAC_SIGNING` to `true`. The next tag produces signed, notarized
+   `.app` and `.dmg` bundles. All the Apple values are gated together, so a
+   half-configured set never makes a build attempt signing and fail.
 
 `bundle.macOS.hardenedRuntime` is already enabled (required for notarization).
 
@@ -78,6 +103,26 @@ Either **Azure Trusted Signing** (cloud, immediate SmartScreen trust, paid) via
 `windows.signCommand` in `tauri.conf.json`, or a classic OV `.pfx` certificate
 via `signtool`. Without either, Windows builds are unsigned (users see a
 SmartScreen warning).
+
+## What users see from an unsigned build
+
+While a platform ships unsigned, the release notes must tell users how to get
+past the first-open warning. The text to paste is in
+[`docs/release-notes.md`](./release-notes.md); this is the reasoning behind it.
+
+- **macOS 15 (Sequoia) and later.** Control-click → Open no longer bypasses
+  Gatekeeper. The user tries to open the app once, then goes to System Settings
+  → Privacy & Security and clicks **Open Anyway**. If macOS instead says the app
+  "is damaged and can't be opened", that dialog has no Open Anyway: the way
+  through is removing the quarantine attribute,
+  `xattr -dr com.apple.quarantine /Applications/Asterisco.app`. Which of the two
+  dialogs an unsigned build triggers is checked in the platform smoke test.
+- **macOS 14 and earlier.** Control-click (or right-click) the app → Open, then
+  Open in the dialog.
+- **Windows.** SmartScreen shows "Windows protected your PC": More info → Run
+  anyway.
+- **Linux.** No warning. The AppImage needs the executable bit
+  (`chmod +x`); the `.deb` installs through the package manager.
 
 ## Pre-tag manual smoke test
 
@@ -187,7 +232,11 @@ git push origin app-v1.0.0
 
 The workflow builds macOS (arm64 + x64), Linux (deb + AppImage) and Windows
 (NSIS), generates `THIRD-PARTY-NOTICES`, and creates a **draft** GitHub Release
-with the bundles + `latest.json`. Verify, then publish.
+with the bundles + `latest.json`. Paste the release notes from
+[`docs/release-notes.md`](./release-notes.md) into the draft, filling in the
+version, then verify and publish. For a release candidate (`app-v1.0.0-rc.1`),
+tick **Set as a pre-release** if the draft is ever published: a pre-release is
+never "latest", so the updater does not offer it.
 
 ## Build provenance attestations
 
