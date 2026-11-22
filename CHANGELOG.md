@@ -5,9 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-> These are pre-1.0 development releases. **v1.0.0 has not been released yet.**
-
-## [Unreleased]
+## [1.0.0] — 2026-11-22
 
 The 1.0 consolidation: fewer features, fewer dependencies, and the ones that
 stay made correct. Files you open are left as they were unless you change them.
