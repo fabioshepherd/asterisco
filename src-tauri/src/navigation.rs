@@ -16,6 +16,9 @@ use tauri::{Manager, Runtime, Url};
 /// `notes.md` resolves to `tauri://localhost/notes.md`, which would reload the
 /// app (Vite serves `index.html` for unknown paths) and lose unsaved edits.
 /// `?print=1`, `#fn-…` anchors and a reload of the current page stay allowed.
+/// The empty path is the root too: macOS loads the app as `tauri://localhost`
+/// with no slash, and for a non-special scheme such as `tauri:` the URL parser
+/// keeps that path as `""` instead of normalizing it to `/`.
 pub fn is_app_url(url: &Url, dev_url: Option<&Url>) -> bool {
     let bundled = match url.scheme() {
         "tauri" => url.host_str() == Some("localhost"),
@@ -23,7 +26,7 @@ pub fn is_app_url(url: &Url, dev_url: Option<&Url>) -> bool {
         _ => false,
     };
     let origin_ok = bundled || dev_url.is_some_and(|dev| dev.origin() == url.origin());
-    origin_ok && matches!(url.path(), "/" | "/index.html")
+    origin_ok && matches!(url.path(), "" | "/" | "/index.html")
 }
 
 /// Plugin whose navigation hook cancels everything [`is_app_url`] rejects.
@@ -58,6 +61,10 @@ mod tests {
     #[test]
     fn allows_the_bundled_app_and_its_print_page() {
         assert!(is_app_url(&url("tauri://localhost/"), None));
+        // macOS loads the app as `tauri://localhost` with no slash; for a
+        // non-special scheme the parsed path is "" rather than "/".
+        assert!(is_app_url(&url("tauri://localhost"), None));
+        assert!(is_app_url(&url("tauri://localhost?print=1"), None));
         assert!(is_app_url(
             &url("tauri://localhost/index.html?print=1"),
             None
