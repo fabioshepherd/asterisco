@@ -1,0 +1,472 @@
+{
+  "untitled": "Senza titolo",
+  "placeholder": "Inizia a scrivere…",
+  "document": {
+    "editorLabel": "{{name}}",
+    "sourceLabel": "{{name}}, sorgente Markdown"
+  },
+  "tabs": {
+    "label": "Documenti aperti",
+    "close": "Chiudi {{name}}",
+    "closeAction": "Chiudi",
+    "copyPath": "Copia percorso",
+    "closeOthers": "Chiudi le altre",
+    "closeToTheRight": "Chiudi quelle a destra",
+    "closeAll": "Chiudi tutte",
+    "new": "Nuova scheda",
+    "menuLabel": "Azioni scheda",
+    "unsavedName": "{{name}}, modifiche non salvate",
+    "rename": {
+      "aria": "Rinomina file",
+      "action": "Rinomina",
+      "empty": "Il nome non può essere vuoto",
+      "invalidChars": "Il nome contiene caratteri non validi",
+      "exists": "Esiste già un file \"{{name}}\"",
+      "notFound": "Il file non esiste più",
+      "failed": "Impossibile rinominare il file"
+    },
+    "announce": {
+      "lifted": "Preso {{name}}",
+      "dropped": "{{name}} spostato",
+      "cancelled": "Spostamento annullato"
+    }
+  },
+  "fileTree": {
+    "label": "Albero file",
+    "title": "File",
+    "openFolder": "Apri cartella",
+    "empty": "Nessuna cartella aperta",
+    "emptyFolder": "Cartella vuota",
+    "toggleSidebar": "Mostra/nascondi barra laterale",
+    "noDocuments": "Nessun documento qui",
+    "folderError": "Impossibile leggere {{name}}: {{reason}}",
+    "retry": "Riprova",
+    "folderTruncated": "Cartella troppo grande — documenti trovati nelle prime {{scanned}} voci su {{total}}",
+    "agentFile": "{{name}}, istruzioni per un agente",
+    "filter": "Filtra i documenti",
+    "clearFilter": "Cancella il filtro",
+    "filterEmpty": "Nessun documento corrisponde",
+    "filterCount": "{{total}} documenti",
+    "filterCapped": "{{shown}} di {{total}} documenti",
+    "indexing": "Indicizzazione…",
+    "loadingFolder": "Lettura della cartella…",
+    "indexTruncated": "indice fermato al limite",
+    "indexSkipped": "{{count}} cartelle non leggibili",
+    "collapseAll": "Chiudi tutte le cartelle",
+    "resize": "Ridimensiona la barra laterale"
+  },
+  "commands": {
+    "closeFolder": "Chiudi cartella",
+    "revealInFileTree": "Mostra nell'albero dei file"
+  },
+  "accents": {
+    "orange": "Arancione",
+    "jade": "Giada",
+    "grass": "Erba",
+    "teal": "Verde acqua",
+    "blue": "Blu",
+    "indigo": "Indaco",
+    "plum": "Prugna",
+    "bronze": "Bronzo",
+    "gold": "Oro",
+    "tomato": "Pomodoro",
+    "gray": "Grigio"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "sections": {
+      "appearance": "Aspetto",
+      "editor": "Editor e file",
+      "shortcuts": "Scorciatoie",
+      "general": "Generali"
+    },
+    "sectionsNav": "Sezioni delle impostazioni",
+    "close": "Chiudi le impostazioni",
+    "themePreference": "Tema",
+    "accentColor": "Colore accento",
+    "customTheme": "Tema CSS personalizzato",
+    "customThemeNone": "Nessuno",
+    "openThemesFolder": "Apri cartella temi",
+    "customThemeHint": "Trascina file .css nella cartella temi per usarli qui.",
+    "search": {
+      "placeholder": "Cerca",
+      "heading": "Risultati della ricerca",
+      "empty": "Nessuna impostazione corrisponde a «{{query}}».",
+      "clear": "Cancella ricerca",
+      "results_one": "{{count}} impostazione trovata",
+      "results_other": "{{count}} impostazioni trovate",
+      "label": "Cerca impostazioni"
+    },
+    "groups": {
+      "reading": "Lettura",
+      "writing": "Scrittura",
+      "saving": "Salvataggio",
+      "workspace": "Workspace"
+    },
+    "hints": {
+      "lineWidth": "Larghezza della colonna di testo, in caratteri, in tutte le viste.",
+      "autoPairing": "Inserisce automaticamente la parentesi, la virgoletta o il backtick di chiusura.",
+      "revealActiveFile": "Apre nella barra laterale le cartelle sopra il file che stai leggendo.",
+      "neutral": "Il colore di base di ogni superficie. Grigio è neutro puro; Sabbia tende al caldo, Ardesia al freddo.",
+      "defaultViewMode": "La vista in cui si apre un documento all’avvio dell’app. Puoi cambiarla quando vuoi dalla barra di stato.",
+      "showIgnoredFolders": "Include le cartelle generate o di terze parti (node_modules, dist, target) e tutto ciò che .gitignore esclude — nell’albero dei file, in apertura rapida e nella ricerca. Le cartelle degli agenti come .github e .claude restano sempre visibili."
+    },
+    "fontFamily": "Carattere di lettura",
+    "fonts": {
+      "serif": "Serif",
+      "sans": "Sans"
+    },
+    "fontSize": "Dimensione carattere (px)",
+    "lineHeight": "Interlinea",
+    "lineWidth": "Larghezza riga (ch)",
+    "autoPairing": "Accoppiamento automatico",
+    "revealActiveFile": "Segui il documento aperto",
+    "autoSave": "Salvataggio automatico",
+    "language": "Lingua",
+    "notices": {
+      "title": "Note di terze parti",
+      "description": "Componenti open source inclusi in questa app e le relative licenze.",
+      "loading": "Caricamento delle note…",
+      "error": "Impossibile caricare le note: {{error}}"
+    },
+    "reset": {
+      "label": "Ripristina impostazioni",
+      "button": "Ripristina i valori predefiniti",
+      "confirmTitle": "Ripristinare i valori predefiniti?",
+      "confirmMessage": "Tutte le preferenze tornano ai valori predefiniti. La lingua, i file recenti e le scorciatoie da tastiera vengono mantenuti. L’operazione non può essere annullata.",
+      "footerButton": "Ripristina…"
+    },
+    "neutral": "Base neutra",
+    "neutrals": {
+      "gray": "Grigio",
+      "sand": "Sabbia",
+      "slate": "Ardesia"
+    },
+    "defaultViewMode": "Vista all’avvio",
+    "showIgnoredFolders": "Mostra cartelle ignorate"
+  },
+  "shortcuts": {
+    "hint": "Clicca una scorciatoia per registrarne una nuova. Esc annulla.",
+    "recording": "Premi i tasti…",
+    "reset": "Ripristina la scorciatoia {{name}}",
+    "resetAll": "Ripristina tutte le scorciatoie",
+    "actions": {
+      "newFile": "Nuovo file",
+      "openFile": "Apri file",
+      "openFolder": "Apri cartella",
+      "save": "Salva",
+      "saveAs": "Salva con nome",
+      "print": "Stampa",
+      "closeTab": "Chiudi scheda",
+      "quit": "Esci",
+      "commandPalette": "Tavolozza comandi",
+      "find": "Trova",
+      "searchWorkspace": "Cerca nel workspace",
+      "sourceMode": "Modalità sorgente",
+      "outline": "Struttura",
+      "sidebar": "Barra laterale",
+      "focusFileTree": "Vai all'albero dei file",
+      "settings": "Apri impostazioni",
+      "readingMode": "Modalità lettura",
+      "distractionFree": "Senza distrazioni",
+      "toggleAutoSave": "Attiva/disattiva salvataggio automatico",
+      "moveTabLeft": "Sposta scheda a sinistra",
+      "moveTabRight": "Sposta scheda a destra"
+    },
+    "fixed": {
+      "cycleRecent": "Scorri le schede usate di recente",
+      "cycleRecentBack": "Scorri le schede usate di recente, all’indietro",
+      "leaveCodeEditor": "Sposta il focus fuori dall’editor sorgente o da un blocco di codice",
+      "leaveCodeEditorKeys": "Esc, poi Tab"
+    },
+    "conflictAction": "Già usata da «{{name}}».",
+    "conflictMenu": "Riservata alla voce di menu «{{name}}».",
+    "conflictFixed": "Riservata alla scorciatoia predefinita «{{name}}».",
+    "conflictModifier": "Aggiungi Cmd/Ctrl o Alt alla combinazione.",
+    "reassign": "Riassegna",
+    "unbound": "Non assegnata",
+    "record": "{{name}}: {{combo}}",
+    "recordHint": "Attiva per registrare una nuova combinazione. Esc annulla.",
+    "keyword": "scorciatoia tasto combinazione",
+    "groups": {
+      "file": "File",
+      "navigate": "Naviga",
+      "view": "Vista",
+      "app": "App",
+      "fixed": "Predefinite"
+    },
+    "fixedHint": "Fanno parte dell’app e non sono modificabili.",
+    "resetAllConfirmTitle": "Ripristinare tutte le scorciatoie?",
+    "resetAllConfirmMessage": "Tutte le scorciatoie tornano ai valori predefiniti, incluse quelle che hai modificato. L’operazione non può essere annullata."
+  },
+  "export": {
+    "htmlFilter": "HTML"
+  },
+  "notify": {
+    "region": "Notifiche",
+    "saved": "Documento salvato",
+    "savedAs": "Salvato come «{{name}}»",
+    "saveFailed": "Impossibile salvare: {{error}}",
+    "imageSaveFailed": "Impossibile aggiungere l’immagine: {{error}}",
+    "autoSaveFailed": "Salvataggio automatico fallito — le ultime modifiche non sono salvate.",
+    "themeDeleted": "Il file del tema personalizzato attivo è stato rimosso — ripristinato il tema predefinito.",
+    "deletedExternal": "«{{name}}» è stato eliminato fuori dall'app — salva di nuovo per conservarlo.",
+    "openFailed": "Impossibile aprire il file: {{error}}",
+    "folderMissing": "Quella cartella non esiste più",
+    "fileMissing": "Quel file non esiste più",
+    "exporting": "Esportazione in corso…",
+    "preparingPrint": "Preparazione della stampa…",
+    "copying": "Copia in corso…",
+    "exported": "Esportato in «{{name}}»",
+    "exportFailed": "Esportazione fallita: {{error}}",
+    "printWindowFailed": "Impossibile aprire la finestra di stampa. Riprova.",
+    "copiedMarkdown": "Copiato come Markdown",
+    "copiedHtml": "Copiato come HTML",
+    "copiedPath": "Percorso copiato",
+    "copyPathFailed": "Impossibile copiare il percorso",
+    "movedToTrash": "«{{name}}» spostato nel cestino",
+    "renamed": "Rinominato in «{{name}}»",
+    "fileOpFailed": "Operazione fallita: {{error}}",
+    "updateUnavailable": "Gli aggiornamenti sono disponibili solo nell'app installata",
+    "updateNone": "Hai già l'ultima versione",
+    "updateDownloading": "Download aggiornamento {{version}}…",
+    "updateReady": "Aggiornamento installato — riavvia per applicarlo",
+    "updateFailed": "Controllo aggiornamenti fallito: {{error}}",
+    "dismiss": "Chiudi",
+    "undo": "Annulla",
+    "retry": "Riprova",
+    "clearAll": "Cancella tutto",
+    "more_one": "+{{count}} altro",
+    "more_other": "+{{count}} altri"
+  },
+  "errors": {
+    "io": "il file system ha risposto: {{message}}",
+    "notFound": "non esiste più",
+    "alreadyExists": "esiste già un file con quel nome",
+    "permissionDenied": "permesso negato",
+    "notADirectory": "questo percorso non è una cartella",
+    "trash": "impossibile spostare il file nel cestino",
+    "watch": "impossibile monitorare le modifiche al file",
+    "resource": "impossibile leggere una risorsa inclusa",
+    "imageTooLarge": "supera i 25 MB",
+    "unknown": "si è verificato un errore imprevisto"
+  },
+  "update": {
+    "title": "Aggiornamento disponibile",
+    "confirm": "La versione {{version}} è disponibile. Scaricarla e installarla ora?"
+  },
+  "welcome": {
+    "title": "Nessun file aperto",
+    "subtitle": "Creane uno, aprine uno o riprendi da dove eri rimasto.",
+    "newFile": "Nuovo file",
+    "openFile": "Apri file",
+    "openFolder": "Apri cartella",
+    "recents": "File recenti",
+    "recentFolders": "Cartelle recenti"
+  },
+  "watcher": {
+    "changedTitle": "File modificato su disco",
+    "changedMessage": "«{{name}}» è stato modificato fuori dall'editor. Ricaricare e scartare le tue modifiche?",
+    "reload": "Ricarica",
+    "keep": "Mantieni le mie modifiche"
+  },
+  "modes": {
+    "viewGroup": "Vista documento",
+    "edit": "Modifica",
+    "source": "Sorgente",
+    "reading": "Lettura"
+  },
+  "status": {
+    "words_one": "{{count}} parola",
+    "words_other": "{{count}} parole",
+    "selectionWords_one": "{{count}} parola selezionata",
+    "selectionWords_other": "{{count}} parole selezionate",
+    "caret": "Ri {{line}}, Col {{column}}",
+    "caretLabel": "Riga {{line}}, colonna {{column}}",
+    "autoSave": "Salvataggio automatico",
+    "autoSaveOn": "Salvataggio automatico: attivo",
+    "autoSaveOff": "Salvataggio automatico: disattivo",
+    "saved": "Salvato",
+    "unsaved": "Non salvato"
+  },
+  "palette": {
+    "label": "Tavolozza comandi",
+    "description": "Esegui un comando o salta a un documento o file aperto.",
+    "placeholder": "Digita un comando o cerca file…",
+    "empty": "Nessun risultato",
+    "noWorkspace": "Apri una cartella per cercare i file",
+    "recent": "Recenti",
+    "loadingFiles": "Caricamento file…",
+    "kbd": {
+      "navigate": "Naviga",
+      "select": "Seleziona",
+      "close": "Chiudi"
+    },
+    "groups": {
+      "file": "File",
+      "edit": "Modifica",
+      "format": "Formato",
+      "view": "Vista",
+      "export": "Esporta",
+      "app": "Applicazione"
+    },
+    "openDocuments": "Documenti aperti",
+    "files": "File",
+    "filesTruncated": "Primi {{shown}} file — il workspace ne contiene altri",
+    "recentFolders": "Cartelle recenti"
+  },
+  "find": {
+    "label": "Trova e sostituisci",
+    "find": "Trova",
+    "findPlaceholder": "Trova",
+    "replace": "Sostituisci con",
+    "replacePlaceholder": "Sostituisci con…",
+    "replaceOne": "Sostituisci",
+    "replaceAll": "Sostituisci tutto",
+    "replaceAllCount": "Sostituisci tutto {{count}}",
+    "replaced_one": "{{count}} corrispondenza sostituita · {{undo}} per annullare",
+    "replaced_other": "{{count}} corrispondenze sostituite · {{undo}} per annullare",
+    "invalidRegex": "Espressione regolare non valida",
+    "noMatches": "Nessuna corrispondenza",
+    "count": "{{current}} di {{total}}",
+    "prev": "Corrispondenza precedente",
+    "next": "Corrispondenza successiva",
+    "caseSensitive": "Maiuscole/minuscole",
+    "wholeWord": "Parola intera",
+    "regex": "Espressione regolare",
+    "close": "Chiudi",
+    "toggleReplace": "Mostra/nascondi sostituzione"
+  },
+  "codeBlock": {
+    "searchLanguage": "Cerca linguaggio…",
+    "noResult": "Nessun risultato",
+    "copy": "Copia",
+    "preview": "Anteprima",
+    "previewHide": "Nascondi",
+    "previewEdit": "Modifica",
+    "previewLoading": "Generazione del diagramma…",
+    "mermaidError": "Impossibile renderizzare questo diagramma",
+    "mermaidLabel": "Diagramma"
+  },
+  "slashMenu": {
+    "groups": {
+      "text": "Testo",
+      "list": "Elenchi",
+      "advanced": "Avanzate"
+    },
+    "text": "Testo",
+    "h1": "Titolo 1",
+    "h2": "Titolo 2",
+    "h3": "Titolo 3",
+    "h4": "Titolo 4",
+    "h5": "Titolo 5",
+    "h6": "Titolo 6",
+    "quote": "Citazione",
+    "divider": "Separatore",
+    "bulletList": "Elenco puntato",
+    "orderedList": "Elenco numerato",
+    "taskList": "Elenco di attività",
+    "image": "Immagine",
+    "codeBlock": "Blocco di codice",
+    "table": "Tabella",
+    "math": "Formula"
+  },
+  "toolbar": {
+    "bold": "Grassetto",
+    "italic": "Corsivo",
+    "strikethrough": "Barrato",
+    "code": "Codice inline",
+    "math": "Formula in linea",
+    "link": "Link"
+  },
+  "controls": {
+    "alignLeft": "Allinea colonna a sinistra",
+    "alignCenter": "Centra colonna",
+    "alignRight": "Allinea colonna a destra",
+    "deleteColumn": "Elimina colonna",
+    "deleteRow": "Elimina riga",
+    "addRow": "Aggiungi riga",
+    "addColumn": "Aggiungi colonna",
+    "linkInput": "URL del link",
+    "confirmLink": "Applica link",
+    "copyLink": "Copia link",
+    "editLink": "Modifica link",
+    "removeLink": "Rimuovi link"
+  },
+  "linkTooltip": {
+    "placeholder": "Incolla il link…"
+  },
+  "frontmatter": {
+    "label": "Front matter"
+  },
+  "imageBlock": {
+    "uploadButton": "Carica file",
+    "inlineUploadButton": "Carica",
+    "uploadPlaceholder": "o incolla un link",
+    "captionPlaceholder": "Scrivi una didascalia",
+    "confirm": "Conferma",
+    "altLabel": "Testo alternativo",
+    "altPlaceholder": "Descrivi l’immagine per chi usa un lettore di schermo"
+  },
+  "footnotes": {
+    "backToReference": "Torna al riferimento {{number}}",
+    "preview": "Anteprima nota {{number}}"
+  },
+  "outline": {
+    "title": "Struttura",
+    "label": "Struttura del documento",
+    "hide": "Nascondi struttura",
+    "show": "Mostra struttura",
+    "empty": "Ancora nessun titolo. Aggiungi un titolo con # per creare la struttura."
+  },
+  "fileActions": {
+    "menuLabel": "Azioni file",
+    "newFile": "Nuovo file",
+    "rename": "Rinomina",
+    "delete": "Sposta nel cestino",
+    "newTitle": "Nuovo file",
+    "renameTitle": "Rinomina",
+    "namePlaceholder": "Nome",
+    "create": "Crea",
+    "cancel": "Annulla",
+    "confirmDelete": "Spostare «{{name}}» nel cestino?",
+    "confirmDeleteFolder": "Spostare nel cestino la cartella «{{name}}» e tutto il suo contenuto?",
+    "cannotDeleteRoot": "È la cartella che hai aperto. Chiudila, invece."
+  },
+  "search": {
+    "label": "Cerca nel workspace",
+    "placeholder": "Cerca in tutti i file…",
+    "hint": "Scrivi per cercare tra i file",
+    "searching": "Ricerca in corso…",
+    "empty": "Nessuna corrispondenza",
+    "emptyPartial": "Nessuna corrispondenza nella parte esaminata — la ricerca si è fermata al limite",
+    "failed": "Ricerca fallita",
+    "noWorkspace": "Apri una cartella per cercare tra i file",
+    "summary": "{{matches}} corrispondenze in {{files}} file",
+    "summaryPartial": "{{matches}}+ corrispondenze in {{files}}+ file — la ricerca si è fermata al limite"
+  },
+  "dialog": {
+    "markdownFilter": "Markdown",
+    "unsaved": {
+      "title": "Modifiche non salvate",
+      "message": "«{{name}}» ha modifiche non salvate. Salvarle prima di continuare?",
+      "save": "Salva",
+      "discard": "Non salvare",
+      "cancel": "Annulla"
+    }
+  },
+  "drop": {
+    "title": "Rilascia per aprire",
+    "subtitle": "File Markdown e di testo",
+    "skipped_one": "Impossibile aprire {{name}}: si aprono solo file Markdown e di testo",
+    "skipped_other": "{{count}} file ignorati: si aprono solo file Markdown e di testo"
+  },
+  "about": {
+    "title": "Informazioni su Asterisco",
+    "version": "Versione {{version}}",
+    "license": "Software libero e open source, licenza MIT.",
+    "checkUpdates": "Controlla aggiornamenti",
+    "checking": "Controllo in corso…",
+    "close": "Chiudi"
+  }
+}

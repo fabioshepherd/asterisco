@@ -1,0 +1,472 @@
+{
+  "untitled": "Untitled",
+  "placeholder": "Start writing…",
+  "document": {
+    "editorLabel": "{{name}}",
+    "sourceLabel": "{{name}}, Markdown source"
+  },
+  "tabs": {
+    "label": "Open documents",
+    "close": "Close {{name}}",
+    "closeAction": "Close",
+    "copyPath": "Copy path",
+    "closeOthers": "Close others",
+    "closeToTheRight": "Close to the right",
+    "closeAll": "Close all",
+    "new": "New tab",
+    "menuLabel": "Tab actions",
+    "unsavedName": "{{name}}, unsaved changes",
+    "rename": {
+      "aria": "Rename file",
+      "action": "Rename",
+      "empty": "Name cannot be empty",
+      "invalidChars": "Name contains invalid characters",
+      "exists": "A file named \"{{name}}\" already exists",
+      "notFound": "File no longer exists",
+      "failed": "Could not rename file"
+    },
+    "announce": {
+      "lifted": "Picked up {{name}}",
+      "dropped": "Moved {{name}}",
+      "cancelled": "Move cancelled"
+    }
+  },
+  "fileTree": {
+    "label": "File tree",
+    "title": "Files",
+    "openFolder": "Open folder",
+    "empty": "No folder open",
+    "emptyFolder": "Empty folder",
+    "toggleSidebar": "Toggle sidebar",
+    "noDocuments": "No documents here",
+    "folderError": "Couldn’t read {{name}}: {{reason}}",
+    "retry": "Try again",
+    "folderTruncated": "Folder too large to list — documents found in the first {{scanned}} of {{total}} entries",
+    "agentFile": "{{name}}, agent instructions",
+    "filter": "Filter documents",
+    "clearFilter": "Clear filter",
+    "filterEmpty": "No document matches",
+    "filterCount": "{{total}} documents",
+    "filterCapped": "{{shown}} of {{total}} documents",
+    "indexing": "Indexing…",
+    "loadingFolder": "Reading folder…",
+    "indexTruncated": "index stopped at its limit",
+    "indexSkipped": "{{count}} folders couldn’t be read",
+    "collapseAll": "Collapse all folders",
+    "resize": "Resize sidebar"
+  },
+  "commands": {
+    "closeFolder": "Close folder",
+    "revealInFileTree": "Reveal in file tree"
+  },
+  "accents": {
+    "orange": "Orange",
+    "jade": "Jade",
+    "grass": "Grass",
+    "teal": "Teal",
+    "blue": "Blue",
+    "indigo": "Indigo",
+    "plum": "Plum",
+    "bronze": "Bronze",
+    "gold": "Gold",
+    "tomato": "Tomato",
+    "gray": "Gray"
+  },
+  "settings": {
+    "title": "Settings",
+    "sections": {
+      "appearance": "Appearance",
+      "editor": "Editor & files",
+      "shortcuts": "Shortcuts",
+      "general": "General"
+    },
+    "sectionsNav": "Settings sections",
+    "close": "Close settings",
+    "themePreference": "Theme",
+    "accentColor": "Accent color",
+    "customTheme": "Custom CSS theme",
+    "customThemeNone": "None",
+    "openThemesFolder": "Open themes folder",
+    "customThemeHint": "Drop .css files into the themes folder to use them here.",
+    "search": {
+      "placeholder": "Search",
+      "heading": "Search results",
+      "empty": "No settings match “{{query}}”.",
+      "clear": "Clear search",
+      "results_one": "{{count}} setting matches",
+      "results_other": "{{count}} settings match",
+      "label": "Search settings"
+    },
+    "groups": {
+      "reading": "Reading",
+      "writing": "Writing",
+      "saving": "Saving",
+      "workspace": "Workspace"
+    },
+    "hints": {
+      "lineWidth": "Width of the text column, in characters, in every view.",
+      "autoPairing": "Inserts the matching bracket, quote or backtick automatically.",
+      "revealActiveFile": "Opens the folders above the file you are reading in the sidebar.",
+      "neutral": "The base colour of every surface. Gray is a true neutral; Sand runs warm, Slate cool.",
+      "defaultViewMode": "The view a document opens in when the app starts. You can switch at any time from the status bar.",
+      "showIgnoredFolders": "Includes generated and vendored folders (node_modules, dist, target) and anything .gitignore excludes — in the file tree, quick open and workspace search. Agent folders like .github and .claude are always shown."
+    },
+    "fontFamily": "Reading font",
+    "fonts": {
+      "serif": "Serif",
+      "sans": "Sans"
+    },
+    "fontSize": "Font size (px)",
+    "lineHeight": "Line height",
+    "lineWidth": "Line width (ch)",
+    "autoPairing": "Auto-pairing",
+    "revealActiveFile": "Follow the open document",
+    "autoSave": "Auto-save",
+    "language": "Language",
+    "notices": {
+      "title": "Third-party notices",
+      "description": "Open-source components bundled with this app and their licenses.",
+      "loading": "Loading notices…",
+      "error": "Couldn’t load the notices: {{error}}"
+    },
+    "reset": {
+      "label": "Reset settings",
+      "button": "Reset to defaults",
+      "confirmTitle": "Reset to defaults?",
+      "confirmMessage": "This restores all preferences to their defaults. Your language, recent files and keyboard shortcuts are kept. This can’t be undone.",
+      "footerButton": "Reset…"
+    },
+    "neutral": "Neutral base",
+    "neutrals": {
+      "gray": "Gray",
+      "sand": "Sand",
+      "slate": "Slate"
+    },
+    "defaultViewMode": "View on launch",
+    "showIgnoredFolders": "Show ignored folders"
+  },
+  "shortcuts": {
+    "hint": "Click a shortcut to record a new one. Esc cancels.",
+    "recording": "Press keys…",
+    "reset": "Reset {{name}} shortcut",
+    "resetAll": "Reset all shortcuts",
+    "actions": {
+      "newFile": "New file",
+      "openFile": "Open file",
+      "openFolder": "Open folder",
+      "save": "Save",
+      "saveAs": "Save as",
+      "print": "Print",
+      "closeTab": "Close tab",
+      "quit": "Quit",
+      "commandPalette": "Command palette",
+      "find": "Find",
+      "searchWorkspace": "Search in workspace",
+      "sourceMode": "Toggle source mode",
+      "outline": "Toggle outline",
+      "sidebar": "Toggle sidebar",
+      "focusFileTree": "Focus file tree",
+      "settings": "Open settings",
+      "readingMode": "Toggle reading mode",
+      "distractionFree": "Toggle distraction-free",
+      "toggleAutoSave": "Toggle auto-save",
+      "moveTabLeft": "Move tab left",
+      "moveTabRight": "Move tab right"
+    },
+    "fixed": {
+      "cycleRecent": "Cycle recently used tabs",
+      "cycleRecentBack": "Cycle recently used tabs, backwards",
+      "leaveCodeEditor": "Move focus out of the source editor or a code block",
+      "leaveCodeEditorKeys": "Esc, then Tab"
+    },
+    "conflictAction": "Already used by “{{name}}”.",
+    "conflictMenu": "Reserved by the menu item “{{name}}”.",
+    "conflictFixed": "Reserved by the built-in shortcut “{{name}}”.",
+    "conflictModifier": "Add Cmd/Ctrl or Alt to the combination.",
+    "reassign": "Reassign",
+    "unbound": "Not set",
+    "record": "{{name}}: {{combo}}",
+    "recordHint": "Activate to record a new combination. Esc cancels.",
+    "keyword": "shortcut keybinding key combination",
+    "groups": {
+      "file": "File",
+      "navigate": "Navigate",
+      "view": "View",
+      "app": "App",
+      "fixed": "Built in"
+    },
+    "fixedHint": "These are part of the app and can’t be changed.",
+    "resetAllConfirmTitle": "Reset all shortcuts?",
+    "resetAllConfirmMessage": "Every shortcut goes back to its default, including the ones you changed. This can’t be undone."
+  },
+  "export": {
+    "htmlFilter": "HTML"
+  },
+  "notify": {
+    "region": "Notifications",
+    "saved": "Document saved",
+    "savedAs": "Saved as “{{name}}”",
+    "saveFailed": "Couldn’t save: {{error}}",
+    "imageSaveFailed": "Couldn’t add the image: {{error}}",
+    "autoSaveFailed": "Auto-save failed — your latest changes aren’t saved.",
+    "themeDeleted": "The active custom theme file was removed — reverted to the default theme.",
+    "deletedExternal": "“{{name}}” was deleted outside the app — save again to keep it.",
+    "openFailed": "Couldn’t open file: {{error}}",
+    "folderMissing": "That folder no longer exists",
+    "fileMissing": "That file no longer exists",
+    "exporting": "Exporting…",
+    "preparingPrint": "Preparing to print…",
+    "copying": "Copying…",
+    "exported": "Exported to “{{name}}”",
+    "exportFailed": "Export failed: {{error}}",
+    "printWindowFailed": "Couldn’t open the print window. Please try again.",
+    "copiedMarkdown": "Copied as Markdown",
+    "copiedHtml": "Copied as HTML",
+    "copiedPath": "Path copied",
+    "copyPathFailed": "Couldn’t copy the path",
+    "movedToTrash": "Moved “{{name}}” to the trash",
+    "renamed": "Renamed to “{{name}}”",
+    "fileOpFailed": "Operation failed: {{error}}",
+    "updateUnavailable": "Updates are only available in the installed app",
+    "updateNone": "You’re on the latest version",
+    "updateDownloading": "Downloading update {{version}}…",
+    "updateReady": "Update installed — restart to apply",
+    "updateFailed": "Update check failed: {{error}}",
+    "dismiss": "Dismiss",
+    "undo": "Undo",
+    "retry": "Retry",
+    "clearAll": "Clear all",
+    "more_one": "+{{count}} more",
+    "more_other": "+{{count}} more"
+  },
+  "errors": {
+    "io": "the file system reported: {{message}}",
+    "notFound": "it no longer exists",
+    "alreadyExists": "a file with that name already exists",
+    "permissionDenied": "permission denied",
+    "notADirectory": "that path is not a folder",
+    "trash": "the file couldn’t be moved to the trash",
+    "watch": "the file couldn’t be watched for changes",
+    "resource": "a bundled resource couldn’t be read",
+    "imageTooLarge": "it is larger than 25 MB",
+    "unknown": "an unexpected error occurred"
+  },
+  "update": {
+    "title": "Update available",
+    "confirm": "Version {{version}} is available. Download and install it now?"
+  },
+  "welcome": {
+    "title": "No file open",
+    "subtitle": "Create one, open one, or pick up where you left off.",
+    "newFile": "New file",
+    "openFile": "Open file",
+    "openFolder": "Open folder",
+    "recents": "Recent files",
+    "recentFolders": "Recent folders"
+  },
+  "watcher": {
+    "changedTitle": "File changed on disk",
+    "changedMessage": "“{{name}}” was changed outside the editor. Reload and discard your changes?",
+    "reload": "Reload",
+    "keep": "Keep my changes"
+  },
+  "modes": {
+    "viewGroup": "Document view",
+    "edit": "Edit",
+    "source": "Source",
+    "reading": "Reading"
+  },
+  "status": {
+    "words_one": "{{count}} word",
+    "words_other": "{{count}} words",
+    "selectionWords_one": "{{count}} word selected",
+    "selectionWords_other": "{{count}} words selected",
+    "caret": "Ln {{line}}, Col {{column}}",
+    "caretLabel": "Line {{line}}, column {{column}}",
+    "autoSave": "Auto-save",
+    "autoSaveOn": "Auto-save: on",
+    "autoSaveOff": "Auto-save: off",
+    "saved": "Saved",
+    "unsaved": "Unsaved"
+  },
+  "palette": {
+    "label": "Command palette",
+    "description": "Run a command or jump to an open document or file.",
+    "placeholder": "Type a command or search files…",
+    "empty": "No results",
+    "noWorkspace": "Open a folder to search its files",
+    "recent": "Recent",
+    "loadingFiles": "Loading files…",
+    "kbd": {
+      "navigate": "Navigate",
+      "select": "Select",
+      "close": "Close"
+    },
+    "groups": {
+      "file": "File",
+      "edit": "Edit",
+      "format": "Format",
+      "view": "View",
+      "export": "Export",
+      "app": "Application"
+    },
+    "openDocuments": "Open documents",
+    "files": "Files",
+    "filesTruncated": "First {{shown}} files — the workspace holds more",
+    "recentFolders": "Recent folders"
+  },
+  "find": {
+    "label": "Find and replace",
+    "find": "Find",
+    "findPlaceholder": "Find",
+    "replace": "Replace with",
+    "replacePlaceholder": "Replace with…",
+    "replaceOne": "Replace",
+    "replaceAll": "Replace all",
+    "replaceAllCount": "Replace all {{count}}",
+    "replaced_one": "Replaced {{count}} match · {{undo}} to undo",
+    "replaced_other": "Replaced {{count}} matches · {{undo}} to undo",
+    "invalidRegex": "Invalid regular expression",
+    "noMatches": "No matches",
+    "count": "{{current}} of {{total}}",
+    "prev": "Previous match",
+    "next": "Next match",
+    "caseSensitive": "Match case",
+    "wholeWord": "Whole word",
+    "regex": "Regular expression",
+    "close": "Close",
+    "toggleReplace": "Toggle replace"
+  },
+  "codeBlock": {
+    "searchLanguage": "Search language…",
+    "noResult": "No results",
+    "copy": "Copy",
+    "preview": "Preview",
+    "previewHide": "Hide",
+    "previewEdit": "Edit",
+    "previewLoading": "Rendering diagram…",
+    "mermaidError": "Couldn’t render this diagram",
+    "mermaidLabel": "Diagram"
+  },
+  "slashMenu": {
+    "groups": {
+      "text": "Text",
+      "list": "Lists",
+      "advanced": "Advanced"
+    },
+    "text": "Text",
+    "h1": "Heading 1",
+    "h2": "Heading 2",
+    "h3": "Heading 3",
+    "h4": "Heading 4",
+    "h5": "Heading 5",
+    "h6": "Heading 6",
+    "quote": "Quote",
+    "divider": "Divider",
+    "bulletList": "Bullet list",
+    "orderedList": "Numbered list",
+    "taskList": "Task list",
+    "image": "Image",
+    "codeBlock": "Code block",
+    "table": "Table",
+    "math": "Math"
+  },
+  "toolbar": {
+    "bold": "Bold",
+    "italic": "Italic",
+    "strikethrough": "Strikethrough",
+    "code": "Inline code",
+    "math": "Inline math",
+    "link": "Link"
+  },
+  "controls": {
+    "alignLeft": "Align column left",
+    "alignCenter": "Center column",
+    "alignRight": "Align column right",
+    "deleteColumn": "Delete column",
+    "deleteRow": "Delete row",
+    "addRow": "Add row",
+    "addColumn": "Add column",
+    "linkInput": "Link URL",
+    "confirmLink": "Apply link",
+    "copyLink": "Copy link",
+    "editLink": "Edit link",
+    "removeLink": "Remove link"
+  },
+  "linkTooltip": {
+    "placeholder": "Paste link…"
+  },
+  "frontmatter": {
+    "label": "Front matter"
+  },
+  "imageBlock": {
+    "uploadButton": "Upload file",
+    "inlineUploadButton": "Upload",
+    "uploadPlaceholder": "or paste link",
+    "captionPlaceholder": "Write image caption",
+    "confirm": "Confirm",
+    "altLabel": "Alt text",
+    "altPlaceholder": "Describe the image for screen readers"
+  },
+  "footnotes": {
+    "backToReference": "Back to reference {{number}}",
+    "preview": "Footnote {{number}} preview"
+  },
+  "outline": {
+    "title": "Outline",
+    "label": "Document outline",
+    "hide": "Hide outline",
+    "show": "Show outline",
+    "empty": "No headings yet. Add a # heading to build the outline."
+  },
+  "fileActions": {
+    "menuLabel": "File actions",
+    "newFile": "New file",
+    "rename": "Rename",
+    "delete": "Move to trash",
+    "newTitle": "New file",
+    "renameTitle": "Rename",
+    "namePlaceholder": "Name",
+    "create": "Create",
+    "cancel": "Cancel",
+    "confirmDelete": "Move “{{name}}” to the trash?",
+    "confirmDeleteFolder": "Move the folder “{{name}}” and everything in it to the trash?",
+    "cannotDeleteRoot": "That’s the folder you have open. Close it instead."
+  },
+  "search": {
+    "label": "Search in workspace",
+    "placeholder": "Search all files…",
+    "hint": "Type to search across files",
+    "searching": "Searching…",
+    "empty": "No matches",
+    "emptyPartial": "No matches in the part searched — the search stopped at its limit",
+    "failed": "Search failed",
+    "noWorkspace": "Open a folder to search across files",
+    "summary": "{{matches}} matches in {{files}} files",
+    "summaryPartial": "{{matches}}+ matches in {{files}}+ files — the search stopped at its limit"
+  },
+  "dialog": {
+    "markdownFilter": "Markdown",
+    "unsaved": {
+      "title": "Unsaved changes",
+      "message": "“{{name}}” has unsaved changes. Save them before continuing?",
+      "save": "Save",
+      "discard": "Don’t save",
+      "cancel": "Cancel"
+    }
+  },
+  "drop": {
+    "title": "Drop to open",
+    "subtitle": "Markdown and text files",
+    "skipped_one": "Can’t open {{name}} — only Markdown and text files open here",
+    "skipped_other": "Skipped {{count}} files — only Markdown and text files open here"
+  },
+  "about": {
+    "title": "About Asterisco",
+    "version": "Version {{version}}",
+    "license": "Free and open-source software, MIT license.",
+    "checkUpdates": "Check for updates",
+    "checking": "Checking for updates…",
+    "close": "Close"
+  }
+}

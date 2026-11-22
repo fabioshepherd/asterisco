@@ -1,0 +1,39 @@
+name: Feature proposal
+description: Suggest an improvement or a new capability.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea. Asterisco is deliberately focused: a local-first
+        Markdown editor that sits beside the IDE. Please read
+        [PRODUCT.md](https://github.com/fabioshepherd/asterisco/blob/main/PRODUCT.md)
+        (especially what it refuses to become) before proposing a feature.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do, and what gets in the way today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How you imagine it working. Mock-ups welcome.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional. Other approaches or workarounds you have tried.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues and this has not been proposed yet.
+          required: true
+        - label: I agree to follow this project's [Code of Conduct](https://github.com/fabioshepherd/asterisco/blob/main/CODE_OF_CONDUCT.md).
+          required: true

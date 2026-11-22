@@ -1,0 +1,546 @@
+/*
+ * Crepe editor theme.
+ *
+ * Crepe ships its own CSS: a required common layer plus a palette theme
+ * (`frame`). We accept that base for the MVP (a full restyle to our design
+ * system comes in a later phase) and only remap its CSS variables onto our
+ * semantic design tokens. Because our tokens (`--bg`, `--fg`, …) already flip
+ * on `[data-theme="dark"]`, mapping `--crepe-*` onto them makes the editor
+ * follow light/dark automatically — no separate dark block needed.
+ */
+@import "@milkdown/crepe/theme/common/style.css";
+@import "@milkdown/crepe/theme/frame.css";
+
+.milkdown {
+  --crepe-color-background: var(--bg);
+  --crepe-color-on-background: var(--fg);
+  --crepe-color-surface: var(--bg);
+  --crepe-color-surface-low: var(--muted);
+  --crepe-color-on-surface: var(--fg);
+  --crepe-color-on-surface-variant: var(--muted-fg);
+  --crepe-color-outline: var(--border);
+  --crepe-color-primary: var(--primary);
+  --crepe-color-secondary: var(--muted);
+  --crepe-color-on-secondary: var(--fg);
+  --crepe-color-inverse: var(--fg);
+  --crepe-color-on-inverse: var(--bg);
+  /* Inline code is ink, not accent: the mono face plus the tinted chip already
+   * mark it, and the Signal Rule (DESIGN.md §2) reserves colour for action,
+   * selection, focus, state and error. Colouring every `code` span was the old
+   * system leaking the accent into the reading surface. */
+  --crepe-color-inline-code: var(--fg);
+  --crepe-color-error: var(--danger-text);
+  --crepe-color-hover: var(--muted);
+  --crepe-color-selected: var(--muted);
+  --crepe-color-inline-area: var(--muted);
+
+  --crepe-font-title: var(--editor-font-default, var(--font-serif));
+  --crepe-font-default: var(--editor-font-default, var(--font-serif));
+  --crepe-font-code: var(--font-mono);
+
+  /* Map Crepe's shadow vars onto our token so dark mode isn't stuck with the
+   * bundled light-mode shadows. */
+  --crepe-shadow-1: var(--shadow-card);
+  --crepe-shadow-2: var(--shadow-card);
+}
+
+/* User-configurable editor typography (set from settings via CSS variables). */
+.milkdown .ProseMirror {
+  font-size: var(--editor-font-size, 16px);
+  /* Calmer, editorial reading rhythm: looser lines + breathing room top/bottom. */
+  line-height: var(--editor-line-height, 1.7);
+  padding-block: 2rem;
+  /* Text measure (default 66ch; settings range 50–90), via --editor-measure
+   * (App.tsx). One measure for edit, reading and source views (DESIGN.md §3):
+   * switching views never reflows the column. Applied as centering inline
+   * padding on the editable root — NOT as a per-block max-width — so `ch` resolves ONCE against the body font-size and every
+   * block shares one column width and one left edge. A per-block `max-width: …ch`
+   * re-resolves `ch` against each block's own font-size, so large headings get a
+   * far wider column than body text and their left edge no longer lines up (a
+   * left-to-right "step"). Padding (not max-width) also keeps the editable
+   * full-width, so clicking the margins still places the caret. Because the
+   * padding is symmetric, the prose content box is centered in the pane — the
+   * wide-block break-out below relies on that.
+   *
+   * The floor is NOT 1rem but ~5.5rem: it must reserve room for Crepe's block
+   * handle (the floating ⊕ add + ⠿ drag controls). That handle lives INSIDE the
+   * `overflow-auto` scroll pane (DocumentEditor) and floating-ui places it to the
+   * LEFT of the block — ~66px wide + a 16px offset ≈ 82px of clear left gutter.
+   * With a 1rem (16px) floor the handle overflowed the pane's left edge, so in
+   * narrow windows it was either clipped by the scroll container or
+   * flipped (floating-ui `flip()`) to the RIGHT, overlapping the text. A wide
+   * window never hit this — its `calc` gutter already dwarfs the handle, so
+   * the bug only showed when the floor engaged. 5.5rem (88px) keeps the handle
+   * fully on the left in every pane width while staying symmetric (centering
+   * intact). On wide panes the `calc` term still wins, so nothing shifts. */
+  padding-inline: max(5.5rem, calc((100% - var(--editor-measure, 66ch)) / 2));
+}
+
+/*
+ * Wide-block break-out. Prose stays at the reading measure above, but code
+ * blocks, tables and images carry content the prose column cramps (long lines,
+ * many columns, large images — common in long / AI-generated markdown). These
+ * blocks break out wider than the prose column while staying centered.
+ *
+ * The clamp needs the REAL editor width, which a block can't read on its own: a
+ * percentage resolves against its containing block (the measure-narrowed content
+ * box), not the pane. A CSS `container-type` would expose it via `cqi`, but that
+ * also makes the container a containing block for `position: fixed` descendants
+ * — and Crepe's drag drop-indicator is fixed and positioned in viewport coords,
+ * so containment would shift it. Instead a ResizeObserver on the scroll pane
+ * writes its width to `--editor-pane-w` (DocumentEditor); we clamp against that.
+ *
+ * `min(--editor-wide, pane - gutters)` keeps the break-out inside the pane (no
+ * page-level horizontal scroll). The symmetric `margin-inline` keeps the block
+ * centered: it fills exactly the (centered) content box in flow, while the
+ * border box spills outward equally on both sides.
+ */
+.milkdown .ProseMirror :is(.milkdown-code-block, .milkdown-table-block, .milkdown-image-block) {
+  --break-width: min(
+    var(--editor-wide, 64rem),
+    var(--editor-pane-w, 100%) - 2 * var(--editor-break-gutter, 1.5rem)
+  );
+  width: var(--break-width);
+  max-width: none;
+  margin-inline: calc((100% - var(--break-width)) / 2);
+}
+
+/*
+ * Image resize is not offered: Crepe stores the resize ratio in the image's
+ * `alt`, which must round-trip verbatim (see `src/editor/image-block-alt.ts`).
+ */
+.milkdown .ProseMirror .milkdown-image-block .image-resize-handle {
+  display: none;
+}
+
+/*
+ * Image alt text field (src/editor/image-block-alt.ts): chrome under the image,
+ * shown while the image is selected or the field has focus, never in Reading
+ * view. Crepe strips outlines from inputs inside the image block, so the focus
+ * ring is restored here.
+ */
+.milkdown .milkdown-image-block .image-alt-field {
+  display: none;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0.25rem auto 0;
+  max-width: 32rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted-fg);
+}
+.milkdown
+  .milkdown-image-block:is(.selected, :focus-within):has(> .image-wrapper)
+  .image-alt-field {
+  display: flex;
+}
+[data-view="reading"] .milkdown .milkdown-image-block .image-alt-field {
+  display: none;
+}
+.milkdown .milkdown-image-block .image-alt-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.125rem 0.375rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: var(--fg);
+  caret-color: var(--fg);
+}
+.milkdown .milkdown-image-block .image-alt-field input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Document headings in Source Serif 4 (inherited) with a clear hierarchy: h1
+ * heaviest, h2/h3 semibold, body stays 400 (Crepe default). Weights live inside
+ * the variable wght axis (200–900), so no faux-bold synthesis; the opsz axis
+ * tightens the letterforms at heading sizes on its own. */
+.milkdown .ProseMirror :is(h1, h2, h3, h4, h5, h6) {
+  font-weight: 600;
+}
+.milkdown .ProseMirror h1 {
+  font-weight: 700;
+}
+
+/* Code uses Source Code Pro — do not force its coding ligatures (calt).
+ * Covers inline code, code blocks, and CodeMirror (code blocks + source mode). */
+.milkdown :is(code, pre),
+.cm-editor {
+  font-variant-ligatures: none;
+}
+
+/*
+ * Crepe's reset strips the focus outline inside `.milkdown`. Restore a visible
+ * focus indicator to satisfy WCAG 2.2 AA (matches the global :focus-visible).
+ */
+.milkdown :focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/*
+ * …but NOT the editing surface itself. The ProseMirror root is full-width and
+ * as tall as its content, so a box outline only ever paints its bottom edge —
+ * a stray horizontal line under short documents. A text field's focus is
+ * conveyed by its caret (WCAG-sufficient), so suppress the root outline.
+ */
+.milkdown .ProseMirror:focus-visible,
+.milkdown .ProseMirror:focus {
+  outline: none;
+}
+
+/*
+ * The caret is the editing surface's focus indicator, so it is drawn in ink.
+ * Crepe paints its virtual caret in `--crepe-color-outline` (our `--border`,
+ * step 6: ~1.4:1 on the page), below the 3:1 non-text floor (WCAG 2.4.7,
+ * 1.4.11). Source mode already uses `--fg`.
+ */
+.milkdown .ProseMirror-focused {
+  --prosemirror-virtual-cursor-color: var(--fg);
+}
+
+/* YAML front matter: a read-only, collapsible block at the top of the document. */
+.frontmatter-block {
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  font-size: 0.875rem;
+  user-select: none;
+}
+
+.frontmatter-summary {
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  color: var(--muted-fg);
+  font-family: var(--font-sans);
+  list-style: none;
+}
+
+.frontmatter-summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Disclosure marker: a lucide chevron-right (via mask) rotated open, matching the
+   app's icon language instead of a unicode triangle. */
+.frontmatter-summary::before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-inline-end: 0.25rem;
+  vertical-align: -0.15em;
+  background-color: currentColor;
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E");
+  -webkit-mask: var(--chevron) center / contain no-repeat;
+  mask: var(--chevron) center / contain no-repeat;
+  transition: transform var(--motion-duration-fast) var(--ease-snappy);
+}
+
+.frontmatter-block[open] .frontmatter-summary::before {
+  transform: rotate(90deg);
+}
+
+.frontmatter-content {
+  margin: 0;
+  padding: 0 0.75rem 0.75rem;
+  overflow-x: auto;
+  color: var(--fg);
+  font-family: var(--font-mono);
+  white-space: pre-wrap;
+}
+
+/*
+ * Code-block preview separator label ("Preview"). Crepe's default renders it
+ * ALL-CAPS, in the editor's default font (the reading serif in edit mode), at 60% ink.
+ * That drifts from DESIGN.md on three counts: labels are sentence case (§3,
+ * never ALL CAPS / tracked eyebrows), they belong to the sans chrome world
+ * (One-Voice rule — no reading serif in a UI label), and they use the muted-fg
+ * Label token (AA-guaranteed) rather than an alpha of ink. Same selector as
+ * Crepe's so equal specificity resolves in our favour by cascade order.
+ */
+.milkdown .milkdown-code-block .preview-panel .preview-label {
+  text-transform: none;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  color: var(--muted-fg);
+}
+
+/*
+ * Crepe's floating chrome (slash menu, selection toolbar, link tooltip, inline
+ * math editor, code-block tools and language picker) is app chrome, not the
+ * reading surface: Source Sans 3 (One-Voice rule, DESIGN.md §3), sentence case
+ * (never ALL CAPS), and a floating surface's hairline border and `rounded-lg`
+ * (DESIGN.md §5). Crepe sets `font-family: var(--crepe-font-default)` (our
+ * reading serif) on several descendants, so the variable is re-pointed here
+ * rather than overriding each rule. Crepe class names are internal: re-check
+ * these surfaces after a Milkdown upgrade.
+ */
+.milkdown
+  :is(
+    .milkdown-slash-menu,
+    .milkdown-toolbar,
+    .milkdown-link-preview > .link-preview,
+    .milkdown-link-edit > .link-edit,
+    .milkdown-latex-inline-edit,
+    .milkdown-code-block .tools,
+    .milkdown-code-block .list-wrapper,
+    .milkdown-code-block .cm-panel
+  ) {
+  --crepe-font-default: var(--font-sans);
+  font-family: var(--font-sans);
+}
+.milkdown
+  :is(
+    .milkdown-slash-menu,
+    .milkdown-toolbar,
+    .milkdown-link-preview > .link-preview,
+    .milkdown-link-edit > .link-edit,
+    .milkdown-latex-inline-edit,
+    .milkdown-code-block .list-wrapper
+  ) {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.milkdown .milkdown-slash-menu .menu-groups .menu-group h6,
+.milkdown .milkdown-code-block .cm-panel > :is(button, label) {
+  text-transform: none;
+}
+
+/* Mermaid diagram preview rendered in the code-block preview slot. */
+.mermaid-preview {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.mermaid-preview svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Gentle, themed error block when a diagram fails to render. */
+.mermaid-error {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  /* Error copy: --danger (red-9) is signal-only and fails AA as text. */
+  color: var(--danger-text);
+  font-size: 0.875rem;
+}
+
+/* In-document Find: tint every match, with the current one stronger. */
+.milkdown .find-match {
+  background: color-mix(in oklab, var(--accent) 22%, transparent);
+  border-radius: var(--find-match-radius);
+}
+.milkdown .find-current {
+  background: color-mix(in oklab, var(--accent) 48%, transparent);
+  border-radius: var(--find-match-radius);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+/*
+ * Hide editing-only chrome in reading view (belt-and-suspenders: read-only
+ * already removes input). Selection + copy stay enabled. Crepe block handles,
+ * the slash/placeholder, and the caret are editing affordances only.
+ * (Crepe's placeholder node carries the class `.crepe-placeholder`.)
+ */
+[data-view="reading"] .milkdown .milkdown-block-handle,
+[data-view="reading"] .milkdown .operation-item,
+[data-view="reading"] .milkdown .crepe-placeholder,
+[data-view="reading"] .milkdown .ProseMirror.ProseMirror-focused {
+  caret-color: transparent;
+}
+[data-view="reading"] .milkdown .milkdown-block-handle {
+  display: none;
+}
+
+/* Footnotes: gfm nodes restyled. The numbering plugin sets --fn-num (a quoted
+   string) on each ref <sup> and definition <dl>; we render it via content. */
+.milkdown sup[data-type="footnote_reference"] {
+  /* Hide the raw label text; the ::after pseudo shows the sequential number.
+   * The label is left in the DOM (not aria-hidden) on purpose: it stays in the
+   * a11y tree and is the fallback the `attr(data-label)` content() relies on. */
+  font-size: 0;
+  cursor: pointer;
+}
+.milkdown sup[data-type="footnote_reference"]::after {
+  content: var(--fn-num, attr(data-label));
+  font-size: 0.75rem;
+  font-family: var(--font-sans);
+  color: var(--primary);
+  vertical-align: super;
+  line-height: 0;
+  padding: 0 0.1em;
+}
+.milkdown sup[data-type="footnote_reference"]:hover::after {
+  text-decoration: underline;
+}
+
+/* Footnote definitions: a compact, list-like block at the foot of the document
+   — not boxed cards. A single separator rule sits above the whole group (the
+   first definition); each entry is a hanging-indent row — the sequential number
+   in a left gutter, an inline return-arrow backlink, then the note body. Muted
+   and smaller, the secondary-content convention (matching the HTML/PDF export). */
+.milkdown dl[data-type="footnote_definition"] {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  column-gap: 0.5rem;
+  margin: 0.3rem 0;
+  font-size: 0.85em;
+  color: var(--muted-fg);
+}
+/* One separator rule above the footnotes block (its first definition). gfm
+   footnote definitions are the only <dl> nodes and sit at the document foot, so
+   :first-of-type targets the first one. */
+.milkdown dl[data-type="footnote_definition"]:first-of-type {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.milkdown dl[data-type="footnote_definition"] dt {
+  font-size: 0; /* hide raw label; ::before renders the sequential number */
+  user-select: none;
+}
+.milkdown dl[data-type="footnote_definition"] dt::before {
+  content: var(--fn-num, attr(data-label)) ".";
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-fg);
+}
+.milkdown dl[data-type="footnote_definition"] dd {
+  margin: 0;
+  color: var(--fg);
+}
+.milkdown dl[data-type="footnote_definition"] dd > :last-child {
+  margin-bottom: 0;
+}
+
+/* Accessible backlink button: floated to the start of the definition body so the
+   note text flows alongside it on the first line. The arrow precedes the text —
+   the DPUB-ARIA convention for footnotes (endnotes put it after). Muted until
+   hover/focus to stay unobtrusive within the already-secondary block. */
+.milkdown dl[data-type="footnote_definition"] button.fn-backlink {
+  float: left;
+  margin-right: 0.375rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted-fg);
+  font-size: 0.8125rem;
+  line-height: inherit;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.milkdown dl[data-type="footnote_definition"] button.fn-backlink:hover {
+  color: var(--primary);
+}
+.milkdown dl[data-type="footnote_definition"] button.fn-backlink:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+  color: var(--primary);
+}
+
+/* Read-only hover-preview popover, appended to <body> outside the editor.
+ * pointer-events:none keeps it non-interactive so it never traps the cursor.
+ * No transition is declared, so it trivially honors prefers-reduced-motion. */
+.fn-popover {
+  position: absolute;
+  z-index: var(--z-modal);
+  max-width: 22rem;
+  /* Cap the height so a very long definition can't render an off-screen
+   * popover. It is pointer-events:none (can't scroll), so truncate with
+   * overflow:hidden rather than scroll. */
+  max-height: 12rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-serif);
+  font-size: 0.875rem;
+  box-shadow: var(--shadow-card);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/*
+ * Lists. Crepe's ListItem feature (its own bullet/number labels and task
+ * checkbox) is off (CODE-04), and Crepe's reset plus Tailwind's preflight strip
+ * native markers, so plain lists get them back here, in the muted ink.
+ */
+.milkdown .ProseMirror ul,
+.milkdown .ProseMirror ol {
+  padding-inline-start: 1.75em;
+}
+
+.milkdown .ProseMirror ul {
+  list-style-type: disc;
+}
+
+.milkdown .ProseMirror ul ul {
+  list-style-type: circle;
+}
+
+.milkdown .ProseMirror ol {
+  list-style-type: decimal;
+}
+
+.milkdown .ProseMirror li::marker {
+  color: var(--muted-fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * GFM task items (`- [ ]` / `- [x]`): a checkbox drawn in the marker gutter. A
+ * press on it toggles the item (src/editor/task-list.ts). The box is a UI
+ * component, so its edge uses the muted ink (3:1, WCAG 1.4.11); a checked box
+ * is a solid step-11 fill with the on-solid check.
+ */
+.milkdown .ProseMirror li[data-item-type="task"] {
+  position: relative;
+  list-style: none;
+}
+
+.milkdown .ProseMirror li[data-item-type="task"]::before,
+.milkdown .ProseMirror li[data-item-type="task"]::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: -1.5em;
+  top: 0.4em;
+  width: 1em;
+  height: 1em;
+  cursor: pointer;
+}
+
+.milkdown .ProseMirror li[data-item-type="task"]::before {
+  border: 1.5px solid var(--muted-fg);
+  border-radius: var(--radius-sm);
+}
+
+.milkdown .ProseMirror li[data-checked="true"]::before {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.milkdown .ProseMirror li[data-checked="true"]::after {
+  background-color: var(--primary-fg);
+  --check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  -webkit-mask: var(--check) center / 75% no-repeat;
+  mask: var(--check) center / 75% no-repeat;
+}
+
+/* Reading view is read-only: the box shows the state but does not toggle. */
+.milkdown .ProseMirror[contenteditable="false"] li[data-item-type="task"]::before,
+.milkdown .ProseMirror[contenteditable="false"] li[data-item-type="task"]::after {
+  cursor: default;
+}

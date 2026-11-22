@@ -1,0 +1,19 @@
+{
+  "app": {
+    "title": "Asterisco"
+  },
+  "theme": {
+    "light": "Chiaro",
+    "dark": "Scuro",
+    "system": "Sistema"
+  },
+  "language": {
+    "en": "Inglese",
+    "it": "Italiano"
+  },
+  "error": {
+    "title": "Qualcosa è andato storto",
+    "message": "Si è verificato un errore imprevisto. Il tuo lavoro non è andato perso — prova a ricaricare per ripristinare.",
+    "reload": "Ricarica"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "app": {
+    "title": "Asterisco"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "language": {
+    "en": "English",
+    "it": "Italian"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "message": "An unexpected error occurred. Your work has not been lost — try reloading to recover.",
+    "reload": "Reload"
+  }
+}

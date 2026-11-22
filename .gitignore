@@ -1,0 +1,75 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+dist-ssr/
+build/
+*.local
+
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/
+
+# Generated license notices (rebuilt at packaging time)
+THIRD-PARTY-NOTICES-rust.txt
+THIRD-PARTY-NOTICES-npm.txt
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test / coverage
+coverage/
+.vitest/
+playwright-report/
+test-results/
+blob-report/
+
+# Playwright MCP capture artifacts (screenshots, snapshots, console logs)
+.playwright-mcp/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Git worktrees
+.worktrees/
+
+# Temp diagnostics
+.tmp-diag.txt
+
+# impeccable design skill (installed tooling + runtime state)
+.impeccable/
+.github/skills/
+
+# Agent tooling: personal settings, permissions, skills and worktrees stay local.
+# Personal agent instructions go in CLAUDE.local.md (see CLAUDE.local.md.example).
+.claude/
+CLAUDE.local.md
+
+# Process material — plans, specs, internal reviews. Kept locally, never published.
+docs/plans/
+docs/PRE_RELEASE_REVIEW.md
+docs/V1-BACKLOG.md
+
+# Agent tooling scratch state (ledgers, briefs, review packages) and hooks
+.superpowers/
+.github/hooks/

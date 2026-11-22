@@ -1,0 +1,91 @@
+{
+  "app": {
+    "name": "Asterisco",
+    "about": "About Asterisco",
+    "settings": "Settings…",
+    "checkUpdates": "Check for Updates…",
+    "toggleAutoSave": "Toggle Auto-Save",
+    "quit": "Quit",
+    "hide": "Hide"
+  },
+  "file": {
+    "title": "File",
+    "new": "New",
+    "open": "Open…",
+    "openFolder": "Open Folder…",
+    "closeFolder": "Close Folder",
+    "renameFolder": "Rename Folder",
+    "save": "Save",
+    "saveAs": "Save As…",
+    "print": "Print…",
+    "export": {
+      "title": "Export",
+      "html": "Export HTML…",
+      "copyHtml": "Copy as HTML",
+      "copyMarkdown": "Copy as Markdown"
+    },
+    "close": "Close Tab"
+  },
+  "edit": {
+    "title": "Edit",
+    "find": "Find…",
+    "replace": "Replace…",
+    "findInFiles": "Find in Files…",
+    "undo": "Undo",
+    "redo": "Redo",
+    "cut": "Cut",
+    "copy": "Copy",
+    "paste": "Paste",
+    "selectAll": "Select All"
+  },
+  "format": {
+    "title": "Format",
+    "bold": "Bold",
+    "italic": "Italic",
+    "strikethrough": "Strikethrough",
+    "code": "Inline Code",
+    "link": "Link…",
+    "footnote": "Footnote",
+    "headings": "Headings",
+    "heading1": "Heading 1",
+    "heading2": "Heading 2",
+    "heading3": "Heading 3",
+    "heading4": "Heading 4",
+    "heading5": "Heading 5",
+    "heading6": "Heading 6",
+    "paragraph": "Paragraph"
+  },
+  "view": {
+    "title": "View",
+    "toggleTheme": "Toggle Theme",
+    "fullscreen": "Toggle Full Screen",
+    "commandPalette": "Command Palette",
+    "toggleSidebar": "Toggle Sidebar",
+    "toggleOutline": "Toggle Outline",
+    "focusFileTree": "Focus File Tree",
+    "focusNotifications": "Focus Notifications",
+    "revealInFileTree": "Reveal in File Tree",
+    "editMode": "Edit",
+    "readingMode": "Reading Mode",
+    "sourceMode": "Source Mode",
+    "distractionFree": "Distraction-Free",
+    "moveTabLeft": "Move Tab Left",
+    "moveTabRight": "Move Tab Right"
+  },
+  "window": {
+    "title": "Window",
+    "controls": {
+      "minimize": "Minimize",
+      "maximize": "Maximize",
+      "close": "Close"
+    }
+  },
+  "menubar": {
+    "open": "Menu"
+  },
+  "help": {
+    "title": "Help",
+    "keyboardShortcuts": "Keyboard Shortcuts",
+    "licenses": "Open-Source Licenses"
+  }
+}

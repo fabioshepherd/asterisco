@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Asterisco">
+  <!-- App icon master: 824 px tile on a 1024 canvas (Apple grid margin), with a thin inner border (#484848, ~1.2% of the side) so the tile reads on dark bars. Source: docs/brand/asterisco-icona.svg (64-unit design). -->
+  <g transform="translate(512 512) scale(13.733333) translate(-32 -32)">
+    <rect x="2" y="2" width="60" height="60" rx="14" fill="#202020"/>
+    <rect x="2.45" y="2.45" width="59.1" height="59.1" rx="13.55" fill="none" stroke="#484848" stroke-width="0.9"/>
+  <g fill="#fcfcfc" transform="translate(32 32) scale(0.82) translate(-32 -32)"><path d="M32 32C28.2 26.5 25.5 19 25.5 14a6.5 6.5 0 0 1 13 0C38.5 19 35.8 26.5 32 32Z" transform="rotate(0 32 32)"/><path d="M32 32C28.2 26.5 25.5 19 25.5 14a6.5 6.5 0 0 1 13 0C38.5 19 35.8 26.5 32 32Z" transform="rotate(72 32 32)"/><path d="M32 32C28.2 26.5 25.5 19 25.5 14a6.5 6.5 0 0 1 13 0C38.5 19 35.8 26.5 32 32Z" transform="rotate(144 32 32)"/><path d="M32 32C28.2 26.5 25.5 19 25.5 14a6.5 6.5 0 0 1 13 0C38.5 19 35.8 26.5 32 32Z" transform="rotate(216 32 32)"/><path d="M32 32C28.2 26.5 25.5 19 25.5 14a6.5 6.5 0 0 1 13 0C38.5 19 35.8 26.5 32 32Z" transform="rotate(288 32 32)"/><circle cx="32" cy="32" r="5.5"/></g>
+  </g>
+</svg>

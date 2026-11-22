@@ -1,0 +1,82 @@
+name: Build check
+
+# Non-publishing bundle build to catch packaging breakage on pull requests
+# (icons, bundle config, resources, native deps) that the lighter `ci.yml`
+# checks would miss. Builds on Linux only — no release is created and no signing
+# secret is required; the updater artifacts are signed with a throwaway key
+# minted in the job. This job is intentionally slow; it is a PR gate, not a fast
+# feedback loop.
+
+on:
+  pull_request:
+    branches: [main]
+    # ready_for_review starts the bundle when a draft is marked ready.
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+# A new push to a pull request cancels the run it supersedes (one group per
+# workflow and PR ref). Every other run (pushes to main, manual runs) gets a
+# group of its own: a shared group would leave at most one run pending and
+# cancel the one before it, and every commit that lands on main must be checked.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# The GITHUB_TOKEN can only read the repository unless a job asks for more.
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    # Skipped (reported as success) on draft pull requests; a draft cannot be
+    # merged, and the bundle runs once the pull request is ready for review.
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable (branch head on 2026-11-18)
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          workspaces: src-tauri
+
+      - name: Install Linux dependencies
+        timeout-minutes: 10
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Install frontend dependencies
+        run: bun install
+
+      # `createUpdaterArtifacts` is on and tauri.conf.json carries an updater
+      # public key, so the bundler refuses to finish without a private one: the
+      # build produces both Linux bundles and then dies on the signing step. The
+      # real key is a release secret and has to stay one — a pull request from a
+      # fork cannot reach it, and nothing this job builds is ever installed. A
+      # keypair minted here and discarded with the runner keeps the gate
+      # secret-free while still exercising updater-artifact generation, which is
+      # part of the packaging this job exists to protect. The signature does not
+      # match the configured public key; nothing verifies it, and no artifact
+      # leaves the runner.
+      - name: Mint a throwaway updater signing key
+        run: |
+          bunx tauri signer generate --ci --password "" --write-keys "$RUNNER_TEMP/updater.key"
+          echo "TAURI_SIGNING_PRIVATE_KEY=$(cat "$RUNNER_TEMP/updater.key")" >> "$GITHUB_ENV"
+          echo "TAURI_SIGNING_PRIVATE_KEY_PASSWORD=" >> "$GITHUB_ENV"
+
+      # Omitting tagName/releaseName/releaseId makes tauri-action build the
+      # bundle WITHOUT creating or publishing a GitHub release.
+      - name: Build bundle (no publish)
+        uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0.6.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

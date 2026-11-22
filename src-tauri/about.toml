@@ -1,0 +1,30 @@
+# cargo-about configuration — generates the Rust dependency license report.
+# Install: cargo install --locked --features cli cargo-about   (0.9+ gates the binary behind `cli`)
+# Generate: bun run notices
+#
+# Only permissive licenses are accepted, plus MPL-2.0 (file-level copyleft:
+# it covers only the MPL files themselves, so the project keeps its MIT
+# license). Strong copyleft (GPL/AGPL/LGPL) is rejected because accepting one
+# would force the whole project to relicense. If
+# generation fails on a new dependency's license, review it before adding an
+# entry here.
+
+accepted = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Zlib",
+    "Unlicense",
+    "Unicode-DFS-2016",
+    "Unicode-3.0",
+    "CC0-1.0",
+    "BSL-1.0",
+    "MPL-2.0",
+    "OpenSSL",
+    # Permissive data license (Mozilla root certs via webpki-root-certs). No
+    # copyleft, so it doesn't force a relicense.
+    "CDLA-Permissive-2.0",
+]

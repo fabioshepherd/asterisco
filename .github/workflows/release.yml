@@ -1,0 +1,222 @@
+name: Release
+
+# Build, (optionally) sign, and publish desktop bundles + updater artifacts to a
+# GitHub Release when an `app-v*` tag is pushed. ALL secrets come from the repo's
+# encrypted secrets — none are ever committed. Signing is optional: missing
+# secrets simply produce unsigned builds.
+
+on:
+  push:
+    tags: ["app-v*"]
+  workflow_dispatch:
+
+# One run per tag; a release run is never cancelled by another.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+# The GITHUB_TOKEN can only read the repository unless a job asks for more;
+# the release job raises it to publish.
+permissions:
+  contents: read
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-latest
+            args: ""
+          # Linux needs no signing certificate, so its absence was a pure
+          # regression: tauri.conf.json declares deb and appimage targets that
+          # no runner was building, and the updater feed promised Linux users
+          # releases that never appeared.
+          - platform: ubuntu-22.04
+            args: ""
+          # macOS ships unsigned for now — a deliberate choice, not a gap.
+          # Signing stays gated behind the ENABLE_MAC_SIGNING repository
+          # variable below, so these runners produce unsigned .app/.dmg bundles
+          # rather than failing for want of a certificate. Gatekeeper warns on
+          # first open until a certificate is configured; setting the variable
+          # is all it takes to sign the same builds later.
+          # Two slices rather than a universal binary, matching Apple Silicon +
+          # Intel as separate updater entries.
+          - platform: macos-latest
+            args: "--target aarch64-apple-darwin"
+          - platform: macos-latest
+            args: "--target x86_64-apple-darwin"
+    runs-on: ${{ matrix.platform }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Preflight - updater config
+        shell: bash
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          conf=src-tauri/tauri.conf.json
+          fail=0
+
+          # 1. Placeholder updater endpoint must have been replaced.
+          if grep -q "OWNER/REPO" "$conf"; then
+            echo "::error::updater endpoint still contains OWNER/REPO in $conf"
+            fail=1
+          fi
+
+          # 2. Throwaway placeholder pubkey must have been replaced. The string
+          #    below is the whole committed placeholder pubkey (minisign key id
+          #    3BFCC0D31BCE36A0); a real signing key differs, so it passes this
+          #    guard. Keep it in sync if the placeholder is ever regenerated.
+          placeholder_pubkey="dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNCRkNDMEQzMUJDRTM2QTAKUldTZ05zNGIwOEQ4TzdBVFJ2bWlqbW5EaXZnbzY0Um9xQjlQNUhoY2Mxa0IwL290U1pGZUdDcEEK"
+          if grep -qF "$placeholder_pubkey" "$conf"; then
+            echo "::error::placeholder updater pubkey still present in $conf — replace it with your own"
+            fail=1
+          fi
+
+          # 3. createUpdaterArtifacts requires a signing key to be set.
+          if grep -q '"createUpdaterArtifacts": true' "$conf" && [ -z "${TAURI_SIGNING_PRIVATE_KEY:-}" ]; then
+            echo "::error::createUpdaterArtifacts is true but TAURI_SIGNING_PRIVATE_KEY is empty — updater artifacts cannot be signed"
+            fail=1
+          fi
+
+          if [ "$fail" -ne 0 ]; then
+            echo "Preflight failed: fix the updater configuration before releasing." >&2
+            exit 1
+          fi
+          echo "Preflight OK: updater endpoint, pubkey and signing key are configured."
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable (branch head on 2026-11-18)
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          workspaces: src-tauri
+
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        timeout-minutes: 10
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Install frontend dependencies
+        run: bun install
+
+      - name: Generate THIRD-PARTY-NOTICES
+        shell: bash
+        run: |
+          cargo install --locked --features cli cargo-about@0.9.3
+          bun run notices
+
+      - name: Build, sign and release
+        id: tauri
+        uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0.6.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Updater signing (required for createUpdaterArtifacts) — set these.
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          # macOS code signing + notarization (gated — unsigned until the repo
+          # variable ENABLE_MAC_SIGNING is set to 'true'). All Apple vars are
+          # gated together: a present identity with an empty certificate would
+          # still make Tauri attempt (and fail) signing on a keychain-less runner.
+          APPLE_CERTIFICATE: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.APPLE_CERTIFICATE || '' }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.APPLE_CERTIFICATE_PASSWORD || '' }}
+          APPLE_SIGNING_IDENTITY: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.APPLE_SIGNING_IDENTITY || '' }}
+          APPLE_ID: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.APPLE_ID || '' }}
+          APPLE_PASSWORD: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.APPLE_PASSWORD || '' }}
+          APPLE_TEAM_ID: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.APPLE_TEAM_ID || '' }}
+          KEYCHAIN_PASSWORD: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.KEYCHAIN_PASSWORD || '' }}
+          # Windows Azure Trusted Signing (optional — unsigned if unset).
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "Asterisco ${{ github.ref_name }}"
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}
+
+      # Record the SHA-256 of every file this slice built (the bundles, the
+      # updater archives and their signatures) for the `attest` job. Only the
+      # digests leave the runner; the files themselves are already on the
+      # draft release. Subject names are the paths under src-tauri/target/,
+      # which keeps the two macOS slices apart.
+      - name: Record artifact digests
+        shell: bash
+        env:
+          ARTIFACT_PATHS: ${{ steps.tauri.outputs.artifactPaths }}
+          SLICE: ${{ strategy.job-index }}
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/digests-$SLICE.txt"
+          : > "$out"
+          while IFS= read -r p; do
+            [ -n "$p" ] || continue
+            if command -v cygpath > /dev/null; then p=$(cygpath -u "$p"); fi
+            [ -f "$p" ] || continue
+            if command -v sha256sum > /dev/null; then
+              sum=$(sha256sum "$p" | cut -d' ' -f1)
+            else
+              sum=$(shasum -a 256 "$p" | cut -d' ' -f1)
+            fi
+            printf '%s  %s\n' "$sum" "${p#*src-tauri/target/}" >> "$out"
+          # tr: the native jq.exe on Windows writes CRLF line endings.
+          done < <(printf '%s' "$ARTIFACT_PATHS" | jq -r '.[]' | tr -d '\r')
+          if [ ! -s "$out" ]; then
+            echo "::error::no artifact found to record"
+            exit 1
+          fi
+          cat "$out"
+
+      - name: Upload artifact digests
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: digests-${{ strategy.job-index }}
+          path: ${{ runner.temp }}/digests-${{ strategy.job-index }}.txt
+          retention-days: 1
+
+  # SLSA build provenance for the release artifacts, signed with Sigstore and
+  # stored in the repository's attestations; verify a download with
+  # `gh attestation verify <file> --repo fabioshepherd/asterisco`. It runs in a
+  # job of its own so that the OIDC token and the attestation permissions never
+  # reach the build steps. Artifact attestations need a public repository on
+  # GitHub Free, so the job is skipped while the repository is private.
+  attest:
+    needs: release
+    if: ${{ !cancelled() && github.event.repository.private == false }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    permissions:
+      id-token: write # request the Sigstore signing certificate
+      attestations: write # store the attestation
+    steps:
+      - name: Download artifact digests
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: digests-*
+          path: ${{ runner.temp }}/digests
+          merge-multiple: true
+
+      - name: Combine digests
+        shell: bash
+        run: cat "$RUNNER_TEMP"/digests/digests-*.txt > "$RUNNER_TEMP/checksums.txt"
+
+      - name: Attest build provenance
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-checksums: ${{ runner.temp }}/checksums.txt

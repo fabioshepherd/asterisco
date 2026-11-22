@@ -1,0 +1,32 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capabilities for the main window (print windows have their own, print.json, and are created in Rust, so this window cannot open a webview on another page). No fs:* permission is granted to the frontend: all I/O goes through custom Rust commands, which act on any path they are given (see ARCHITECTURE.md). Clipboard read is granted for the Windows/Linux Edit ▸ Paste menu item: with the native menu gated to macOS, that item is the only Paste those platforms have, and reading the clipboard is the only way to implement it. The opener is scoped to the themes folder (Settings ▸ Open themes folder) and to web/mail links the user clicks in a document.",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-set-fullscreen",
+    "core:window:allow-is-fullscreen",
+    "core:window:allow-destroy",
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
+    "core:window:allow-start-dragging",
+    "core:window:allow-close",
+    "dialog:default",
+    "store:default",
+    "os:allow-locale",
+    "clipboard-manager:allow-write-text",
+    "clipboard-manager:allow-write-html",
+    "clipboard-manager:allow-read-text",
+    "updater:default",
+    "log:default",
+    {
+      "identifier": "opener:allow-open-path",
+      "allow": [{ "path": "$APPCONFIG/themes" }]
+    },
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [{ "url": "http://*" }, { "url": "https://*" }, { "url": "mailto:*" }]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+/*
+ * Tab strip overflow affordance. When tabs scroll past either edge of the
+ * horizontal strip, fade that edge so it reads as "more tabs this way" instead
+ * of a hard clip. The data attributes are toggled in TabBar.tsx from the
+ * scroll position. `currentColor` is used purely as the opaque stop of an alpha
+ * mask (only its alpha matters, not the colour), so the strip never tints.
+ */
+.tab-strip {
+  --tab-fade: 1.5rem;
+}
+
+.tab-strip[data-overflow-start][data-overflow-end] {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    currentColor var(--tab-fade),
+    currentColor calc(100% - var(--tab-fade)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    currentColor var(--tab-fade),
+    currentColor calc(100% - var(--tab-fade)),
+    transparent
+  );
+}
+
+.tab-strip[data-overflow-start]:not([data-overflow-end]) {
+  -webkit-mask-image: linear-gradient(to right, transparent, currentColor var(--tab-fade));
+  mask-image: linear-gradient(to right, transparent, currentColor var(--tab-fade));
+}
+
+.tab-strip[data-overflow-end]:not([data-overflow-start]) {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    currentColor calc(100% - var(--tab-fade)),
+    transparent
+  );
+  mask-image: linear-gradient(to right, currentColor calc(100% - var(--tab-fade)), transparent);
+}

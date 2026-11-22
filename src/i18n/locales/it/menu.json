@@ -1,0 +1,91 @@
+{
+  "app": {
+    "name": "Asterisco",
+    "about": "Informazioni su Asterisco",
+    "settings": "Impostazioni…",
+    "checkUpdates": "Controlla aggiornamenti…",
+    "toggleAutoSave": "Attiva/disattiva salvataggio automatico",
+    "quit": "Esci",
+    "hide": "Nascondi"
+  },
+  "file": {
+    "title": "File",
+    "new": "Nuovo",
+    "open": "Apri…",
+    "openFolder": "Apri cartella…",
+    "closeFolder": "Chiudi cartella",
+    "renameFolder": "Rinomina cartella",
+    "save": "Salva",
+    "saveAs": "Salva con nome…",
+    "print": "Stampa…",
+    "export": {
+      "title": "Esporta",
+      "html": "Esporta come HTML…",
+      "copyHtml": "Copia come HTML",
+      "copyMarkdown": "Copia come Markdown"
+    },
+    "close": "Chiudi scheda"
+  },
+  "edit": {
+    "title": "Modifica",
+    "find": "Trova…",
+    "replace": "Sostituisci…",
+    "findInFiles": "Cerca nei file…",
+    "undo": "Annulla",
+    "redo": "Ripeti",
+    "cut": "Taglia",
+    "copy": "Copia",
+    "paste": "Incolla",
+    "selectAll": "Seleziona tutto"
+  },
+  "format": {
+    "title": "Formato",
+    "bold": "Grassetto",
+    "italic": "Corsivo",
+    "strikethrough": "Barrato",
+    "code": "Codice inline",
+    "link": "Link…",
+    "footnote": "Nota a piè di pagina",
+    "headings": "Titoli",
+    "heading1": "Titolo 1",
+    "heading2": "Titolo 2",
+    "heading3": "Titolo 3",
+    "heading4": "Titolo 4",
+    "heading5": "Titolo 5",
+    "heading6": "Titolo 6",
+    "paragraph": "Paragrafo"
+  },
+  "view": {
+    "title": "Visualizza",
+    "toggleTheme": "Cambia tema",
+    "fullscreen": "Schermo intero",
+    "commandPalette": "Tavolozza comandi",
+    "toggleSidebar": "Mostra/nascondi barra laterale",
+    "toggleOutline": "Mostra/nascondi struttura",
+    "focusFileTree": "Vai all'albero dei file",
+    "focusNotifications": "Vai alle notifiche",
+    "revealInFileTree": "Mostra nell'albero dei file",
+    "editMode": "Modifica",
+    "readingMode": "Modalità lettura",
+    "sourceMode": "Modalità sorgente",
+    "distractionFree": "Senza distrazioni",
+    "moveTabLeft": "Sposta scheda a sinistra",
+    "moveTabRight": "Sposta scheda a destra"
+  },
+  "window": {
+    "title": "Finestra",
+    "controls": {
+      "minimize": "Riduci a icona",
+      "maximize": "Ingrandisci",
+      "close": "Chiudi"
+    }
+  },
+  "menubar": {
+    "open": "Menu"
+  },
+  "help": {
+    "title": "Aiuto",
+    "keyboardShortcuts": "Scorciatoie da tastiera",
+    "licenses": "Licenze open source"
+  }
+}

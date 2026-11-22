@@ -1,0 +1,222 @@
+@import "tailwindcss";
+@import "./fonts.css";
+@import "./accents.css";
+@import "./neutrals.css";
+
+/*
+ * Dark mode is driven by a manual `data-theme` attribute on <html> (set by the
+ * pre-paint bootstrap and kept in sync by useThemeSync). The OS preference is
+ * resolved in JS, so the `dark:` variant keys off the attribute, not the media query.
+ */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* --- Primitive tokens: generate utilities + emit CSS variables on :root --- */
+@theme {
+  /*
+   * Typography role mapping (faces self-hosted in fonts.css; theme-agnostic).
+   * One superfamily, three cuts — DESIGN.md "The One-Voice Rule":
+   *   --font-sans  → Source Sans 3    → app chrome (sidebar, toolbar, menus, dialogs, settings)
+   *   --font-serif → Source Serif 4   → editor reading body + document titles
+   *   --font-mono  → Source Code Pro  → code, source mode, and machine data
+   *                                     (paths, counts, sizes, shortcuts)
+   */
+  --font-sans:
+    "Source Sans 3 Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Source Serif 4 Variable", ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono: "Source Code Pro Variable", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Tight corners — instrument, not bubble (DESIGN.md §5). */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -4px rgb(0 0 0 / 0.1);
+
+  /* Motion — see src/lib/motion.ts for the JS mirror. Snappy & quiet. */
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/*
+ * Semantic neutral tokens are defined in neutrals.css (selectable via
+ * `data-neutral`, default Gray). This `:root` block keeps the fixed danger scale
+ * plus the layout/motion tokens; the accent-derived tokens live in accents.css.
+ */
+:root {
+  /*
+   * On-solid text (DESIGN.md, "The Measured-Fill Rule"). A solid accent fill is
+   * always the scale's step 11; the text on it is the opposite neutral extreme —
+   * white on light mode's dark fill, the page itself on dark mode's bright fill.
+   * Measured across the whole accent set: 4.51:1 → 6.01:1 light, ~9:1 dark, all
+   * above the AA 4.5:1 floor. Pinned by src/styles/contrast.test.ts.
+   */
+  --on-solid: white;
+  --primary-fg: var(--on-solid);
+  --accent-fg: var(--on-solid);
+
+  /* Danger follows the same split as the accent: step 9 is the SIGNAL (icons,
+     borders, tints — non-text, 3:1 floor), step 11 is the solid fill that carries
+     text (5.21:1 with white in light) and the colour of error COPY. White on
+     red-9 is 3.91:1 and must never sit under small text. */
+  --danger: var(--red-9);
+  --danger-solid: var(--red-11);
+  --danger-fg: white;
+  /* Error COPY. Same step as --danger-solid, kept under its own name so intent
+     reads at the call site: `text-danger-text` for words, `bg-danger-solid` for
+     a fill. 5.08:1 against the page. */
+  --danger-text: var(--red-11);
+
+  /* Code syntax (CodeMirror: code blocks and Source mode, src/editor/code-theme.ts).
+     Content colour, not signal (DESIGN.md §2): hues away from the default accent,
+     each bound to a step-11 text step and measured ≥ 4.5:1 on the page and raised
+     surface in every neutral, both modes (contrast.test.ts). Comments and markup
+     use --muted-fg; invalid code uses --danger-text. */
+  --syntax-keyword: var(--plum-11);
+  --syntax-string: var(--grass-11);
+  --syntax-literal: var(--indigo-11);
+  --syntax-type: var(--gold-11);
+
+  /* Hover on a solid fill mixes toward --fg, never toward --bg (DESIGN.md,
+     "The Hover-Toward-Ink Rule"): lightening a fill toward the page destroys the
+     contrast it was chosen for. Because --fg flips per mode, one direction is
+     correct in both — darker in light, brighter in dark. */
+  --primary-hover: color-mix(in srgb, var(--primary) 88%, var(--fg));
+  --danger-hover: color-mix(in srgb, var(--danger-solid) 88%, var(--fg));
+
+  /* Modal/dialog scrim — the black wash that dims the page behind a floating
+     surface (dialogs, command palette). Tokenized so every overlay shares one
+     knob instead of a hand-authored `bg-black/40` per dialog. */
+  --scrim: rgb(0 0 0 / 0.4);
+
+  /* Corner radius for in-document find-match highlights. Tighter than the chrome
+     `rounded` scale (sm/md/lg) on purpose — a 6px corner reads as bubbly on an
+     inline text span. Shared by the WYSIWYG (.find-match) and source-mode
+     (CodeMirror) highlights so the two views stay identical. */
+  --find-match-radius: 2px;
+
+  /* Motion durations — ms mirror of DURATION (seconds) in src/lib/motion.ts.
+     Consumed via arbitrary utilities, e.g. duration-(--motion-duration-fast). */
+  --motion-duration-fast: 120ms;
+  --motion-duration-base: 160ms;
+  --motion-duration-slow: 220ms;
+
+  /* Semantic stacking scale. Names the implicit ladder the app already uses
+     (floating panels → context menu → drag overlay → modal → toast) so layers
+     are ordered by intent, not by magic numbers scattered across components.
+     Values match the current numeric usage; adopt the tokens incrementally. */
+  --z-floating: 10; /* inline floating panels (find/replace) */
+  --z-panel: 20; /* docked search panel */
+  --z-context: 30; /* context menus */
+  --z-overlay: 40; /* full-window drag/drop overlay */
+  --z-modal: 50; /* command palette, dialogs */
+  --z-toast: 60; /* toasts, above modals */
+
+  /* Custom title bar layout (see src/app/chrome). macOS reserves the left inset
+     for the native traffic lights; the title bar row has a fixed height. */
+  --titlebar-mac-inset: 78px;
+  --titlebar-height: 2.25rem;
+}
+
+/*
+ * Dark mode flips the on-solid text: step 11 is a bright tint there, so white
+ * would collapse to ~2:1 while the page ink measures ~9:1. Same rule, opposite
+ * end of the neutral ramp.
+ */
+[data-theme="dark"] {
+  --on-solid: var(--bg);
+}
+
+/*
+ * Map the semantic variables into Tailwind color utilities. `inline` makes the
+ * utility resolve to `var(--bg)` at use-site, so it follows live theme switches.
+ */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-muted-fg: var(--muted-fg);
+  --color-border: var(--border);
+  --color-surface: var(--surface);
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-solid: var(--on-solid);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-danger: var(--danger);
+  --color-danger-solid: var(--danger-solid);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-fg: var(--danger-fg);
+  --color-danger-text: var(--danger-text);
+  --color-ring: var(--ring);
+  --color-scrim: var(--scrim);
+}
+
+/*
+ * The `data` type role (DESIGN.md §3, "The Machine-Data Rule"): anything the
+ * machine knows and the human only reads — file paths, word and character
+ * counts, byte sizes, timestamps, keyboard shortcuts, cursor position — is set
+ * in mono at label size. Human prose stays serif and app chrome stays sans; a
+ * word count in sans makes an exact number look like an opinion.
+ *
+ * It is one utility rather than a `--text-*` theme key because the role binds a
+ * family, a size and numeric rendering together: `font-mono text-xs tabular-nums`
+ * repeated at every call site would let the three drift apart. Ligatures are off
+ * for the same reason they are off in code (see editor-theme.css) — a coding
+ * ligature in a path or a shortcut is decoration on data.
+ */
+@utility text-data {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-variant-ligatures: none;
+  font-variant-numeric: tabular-nums;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Tell the UA which scheme is live so native controls (number-input spinners,
+     select popups, scrollbars) render legibly. Dark is driven by a `.dark` class
+     / data-theme attribute, not the media query, so the UA needs this hint. */
+  :root {
+    color-scheme: light;
+  }
+  :root.dark {
+    color-scheme: dark;
+  }
+
+  /* WCAG 2.2: focus must always be visible. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* Text selection uses the accent's step-4 tint (follows the chosen accent). */
+  ::selection {
+    background: var(--selection);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

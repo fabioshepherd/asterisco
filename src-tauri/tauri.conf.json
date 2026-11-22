@@ -1,0 +1,94 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "Asterisco",
+  "version": "0.5.1",
+  "identifier": "it.fabiopastore.asterisco",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "bun run dev",
+    "beforeBuildCommand": "bun run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Asterisco",
+        "width": 1100,
+        "height": 720,
+        "minWidth": 640,
+        "minHeight": 480,
+        "resizable": true,
+        "fullscreen": false,
+        "dragDropEnabled": false,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true
+      }
+    ],
+    "security": {
+      "csp": {
+        "default-src": ["'self'"],
+        "img-src": ["'self'", "data:", "blob:", "asset:", "http://asset.localhost"],
+        "style-src": ["'self'", "'unsafe-inline'"],
+        "font-src": ["'self'", "data:"],
+        "script-src": ["'self'"],
+        "connect-src": ["'self'", "ipc:", "http://ipc.localhost"]
+      },
+      "devCsp": "default-src 'self'; img-src 'self' data: blob: asset: http://asset.localhost; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' ipc: http://ipc.localhost ws://localhost:5173 http://localhost:5173",
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["$HOME/**"]
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://github.com/fabioshepherd/asterisco/releases/latest/download/latest.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDdFMDZBRTVCODk4QzZFMTIKUldRU2JveUpXNjRHZmpqUW5XNkZSQ0VOcnBlQTVLOW4rZ2RwTEFtUk5nMm9QT0tmQnh6eDRkNE4K",
+      "windows": {
+        "installMode": "passive"
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["app", "dmg", "nsis", "deb", "appimage"],
+    "createUpdaterArtifacts": true,
+    "category": "Productivity",
+    "shortDescription": "A native, local-first Markdown editor for the files a codebase is made of",
+    "longDescription": "Asterisco opens a Markdown file and shows it as it will be read while you edit it: one column, seamless inline WYSIWYG, no split preview. READMEs, ADRs, specs, changelogs and agent briefs stay plain .md on your own disk — no account, no telemetry, no network except the update check you trigger.",
+    "publisher": "Fabio Pastore",
+    "copyright": "© 2026 Fabio Pastore — MIT",
+    "licenseFile": "../LICENSE",
+    "resources": ["THIRD-PARTY-NOTICES.txt"],
+    "fileAssociations": [
+      {
+        "ext": ["md", "markdown", "mdown", "mkd"],
+        "name": "Markdown",
+        "description": "Markdown document",
+        "mimeType": "text/markdown",
+        "role": "Editor",
+        "rank": "Default"
+      }
+    ],
+    "icon": [
+      "icons/32x32.png",
+      "icons/64x64.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "macOS": {
+      "minimumSystemVersion": "10.15",
+      "hardenedRuntime": true
+    },
+    "linux": {
+      "deb": {
+        "depends": []
+      }
+    }
+  }
+}

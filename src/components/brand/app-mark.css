@@ -1,0 +1,11 @@
+/*
+ * The animated parts of the app mark (docs/brand/logo-e-animazioni.md). Every
+ * part transforms around the centre of the 64-unit view box, so a rotation or a
+ * scale set on any of them by the motion slice pivots on the asterisk's core.
+ */
+.app-mark .spin,
+.app-mark .drop,
+.app-mark .core {
+  transform-box: view-box;
+  transform-origin: 32px 32px;
+}

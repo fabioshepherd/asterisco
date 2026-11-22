@@ -1,0 +1,69 @@
+name: Bug report
+description: Something in Asterisco does not work as it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please search the
+        [existing issues](https://github.com/fabioshepherd/asterisco/issues)
+        first. **Security problems go through
+        [private reporting](https://github.com/fabioshepherd/asterisco/security/advisories/new),
+        not here.** Never paste private file contents or personal paths you do
+        not want to make public.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the problem and what you expected to happen instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The smallest set of steps that shows the problem. A short sample Markdown file helps.
+      placeholder: |
+        1. Open a folder with …
+        2. Type …
+        3. See …
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Asterisco version
+      description: Shown in the About dialog.
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS (Apple Silicon)
+        - macOS (Intel)
+        - Windows
+        - Linux (deb)
+        - Linux (AppImage)
+        - Other / built from source
+    validations:
+      required: true
+  - type: input
+    id: os-version
+    attributes:
+      label: Operating system version
+      placeholder: "macOS 26.1, Windows 11 24H2, Ubuntu 24.04 …"
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots, logs or other context
+      description: Optional. Drag images here; paste logs as text.
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      options:
+        - label: I agree to follow this project's [Code of Conduct](https://github.com/fabioshepherd/asterisco/blob/main/CODE_OF_CONDUCT.md).
+          required: true

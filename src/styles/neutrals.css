@@ -1,0 +1,59 @@
+/*
+ * Neutral base palette layer. Mirrors accents.css: the neutral semantic tokens
+ * (--bg/--fg/--muted/--muted-fg/--border/--surface) are re-pointed per neutral,
+ * keyed by a `data-neutral` attribute on <html> (the twin of data-accent / data-theme).
+ *
+ * Each Radix gray scale ships separate light/dark files (scoped to :root / .dark),
+ * so the same `var(--slate-N)` resolves per mode automatically — ONE block per
+ * neutral therefore covers BOTH light and dark; switching neutral only re-points
+ * the tokens. Radix guarantees the text steps (11/12) clear AA against the surface
+ * steps (1/2) in both modes; the accent pairings are the ones that need measuring
+ * (see accents.css and contrast.test.ts).
+ *
+ * Default = Gray, a TRUE neutral at chroma 0 (DESIGN.md, "The Chroma-Zero Rule"):
+ * neither warm paper nor cool terminal. Temperature is the user's axis, not a
+ * default — Sand (warm) and Slate (cool) are one click away in Settings.
+ *
+ * (Gray + red are imported by accents.css; only the extra neutrals are added here.)
+ */
+@import "@radix-ui/colors/sand.css";
+@import "@radix-ui/colors/sand-dark.css";
+@import "@radix-ui/colors/slate.css";
+@import "@radix-ui/colors/slate-dark.css";
+
+/* Default neutral = Gray (chroma 0). */
+:root {
+  --bg: var(--gray-1);
+  --fg: var(--gray-12);
+  --muted: var(--gray-3);
+  --muted-fg: var(--gray-11);
+  --border: var(--gray-6);
+  --surface: var(--gray-2);
+}
+
+[data-neutral="gray"] {
+  --bg: var(--gray-1);
+  --fg: var(--gray-12);
+  --muted: var(--gray-3);
+  --muted-fg: var(--gray-11);
+  --border: var(--gray-6);
+  --surface: var(--gray-2);
+}
+
+[data-neutral="sand"] {
+  --bg: var(--sand-1);
+  --fg: var(--sand-12);
+  --muted: var(--sand-3);
+  --muted-fg: var(--sand-11);
+  --border: var(--sand-6);
+  --surface: var(--sand-2);
+}
+
+[data-neutral="slate"] {
+  --bg: var(--slate-1);
+  --fg: var(--slate-12);
+  --muted: var(--slate-3);
+  --muted-fg: var(--slate-11);
+  --border: var(--slate-6);
+  --surface: var(--slate-2);
+}

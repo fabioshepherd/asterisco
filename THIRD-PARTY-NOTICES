@@ -1,0 +1,25 @@
+THIRD-PARTY NOTICES
+===================
+
+Asterisco is MIT-licensed (see LICENSE). It bundles third-party
+open-source components, each under its own license. All current dependencies
+are under permissive licenses (MIT / Apache-2.0 / ISC / BSD / Unicode /
+MPL-2.0). Copyleft (GPL/AGPL/LGPL) dependencies are excluded — accepting one
+would force the whole project to relicense — so verify any new dependency's
+license before adding it.
+
+Regenerate the notices
+-----------------------
+
+    bun run notices
+
+This runs `cargo about` over the Rust crates and `generate-license-file` over
+the npm tree, then concatenates both into the file that actually ships with
+the app:
+
+    src-tauri/THIRD-PARTY-NOTICES.txt
+
+That file is committed and bundled as a packaging resource (see
+`tauri.conf.json`'s `bundle.resources` and `docs/RELEASING.md`); it is what
+users see from Settings → "View third-party notices". This root-level file is
+a short pointer to it, not a copy.

@@ -1,0 +1,144 @@
+/*
+ * Radix Colors palette layer — ACCENT mapping.
+ *
+ * The neutral base is selectable (default Gray, true chroma-0) via a `data-neutral`
+ * attribute on <html>; its scales and token roles live in `neutrals.css`. This file
+ * maps the ACCENT axis: a curated set of official Radix scales, selectable from
+ * Settings via a `data-accent` attribute on <html> (the twin of `data-theme`). Each
+ * Radix scale ships a light file (scoped to `:root` / `.light`) and a dark file
+ * (scoped to `.dark`); we toggle a `.dark` class on <html> alongside `data-theme`, so
+ * every `var(--scale-N)` auto-resolves per mode. One static block per accent therefore
+ * covers BOTH light and dark — switching accent only re-points the accent-derived
+ * semantic tokens to another scale.
+ *
+ * Token roles — DESIGN.md §2, measured, not inherited:
+ *   --primary   : step 11. The solid fill that CARRIES TEXT (buttons, active rows),
+ *                 accent-coloured text, and state indicators (unsaved dot,
+ *                 selected-tab underline). White on it in light, page ink in dark
+ *                 (--primary-fg flips in global.css): 4.51:1 → 6.01:1 / ~9:1.
+ *   --accent    : step 9.  The pure signal — accent borders, tints, graphics.
+ *                 NEVER behind small text: white on step 9 measures
+ *                 2.97:1 → 3.91:1 and fails AA at every accent. Against the light
+ *                 page it can fall under 3:1, so it is not an indicator colour.
+ *   --ring      : step 11. Focus ring. Step 8 (Radix's documented ring step) is
+ *                 2.29:1 against the page in light mode — below the 3:1 floor.
+ *   --selection : step 4.  Text-selection tint.
+ * These pairings are pinned by `contrast.test.ts`; changing a step there fails it.
+ */
+
+/* Danger (fixed, never follows the accent axis) + the default neutral live here;
+ * the other neutral scales load via neutrals.css. */
+@import "@radix-ui/colors/gray.css";
+@import "@radix-ui/colors/gray-dark.css";
+@import "@radix-ui/colors/red.css";
+@import "@radix-ui/colors/red-dark.css";
+
+/* Selectable accent scales. */
+@import "@radix-ui/colors/orange.css";
+@import "@radix-ui/colors/orange-dark.css";
+@import "@radix-ui/colors/jade.css";
+@import "@radix-ui/colors/jade-dark.css";
+@import "@radix-ui/colors/grass.css";
+@import "@radix-ui/colors/grass-dark.css";
+@import "@radix-ui/colors/teal.css";
+@import "@radix-ui/colors/teal-dark.css";
+@import "@radix-ui/colors/blue.css";
+@import "@radix-ui/colors/blue-dark.css";
+@import "@radix-ui/colors/indigo.css";
+@import "@radix-ui/colors/indigo-dark.css";
+@import "@radix-ui/colors/plum.css";
+@import "@radix-ui/colors/plum-dark.css";
+@import "@radix-ui/colors/bronze.css";
+@import "@radix-ui/colors/bronze-dark.css";
+@import "@radix-ui/colors/gold.css";
+@import "@radix-ui/colors/gold-dark.css";
+@import "@radix-ui/colors/tomato.css";
+@import "@radix-ui/colors/tomato-dark.css";
+
+/* --- Accent role mapping: re-point the accent-derived semantic tokens. --- */
+
+/* Default accent = Orange, the signal colour (also the fallback when data-accent
+ * is unset/unknown). Orange carries the thinnest margin in the set — 4.51:1 for
+ * white on step 11 — which is why the contrast test exists. */
+:root {
+  --primary: var(--orange-11);
+  --accent: var(--orange-9);
+  --ring: var(--orange-11);
+  --selection: var(--orange-4);
+}
+
+[data-accent="jade"] {
+  --primary: var(--jade-11);
+  --accent: var(--jade-9);
+  --ring: var(--jade-11);
+  --selection: var(--jade-4);
+}
+
+[data-accent="grass"] {
+  --primary: var(--grass-11);
+  --accent: var(--grass-9);
+  --ring: var(--grass-11);
+  --selection: var(--grass-4);
+}
+
+[data-accent="teal"] {
+  --primary: var(--teal-11);
+  --accent: var(--teal-9);
+  --ring: var(--teal-11);
+  --selection: var(--teal-4);
+}
+
+[data-accent="blue"] {
+  --primary: var(--blue-11);
+  --accent: var(--blue-9);
+  --ring: var(--blue-11);
+  --selection: var(--blue-4);
+}
+
+[data-accent="indigo"] {
+  --primary: var(--indigo-11);
+  --accent: var(--indigo-9);
+  --ring: var(--indigo-11);
+  --selection: var(--indigo-4);
+}
+
+[data-accent="plum"] {
+  --primary: var(--plum-11);
+  --accent: var(--plum-9);
+  --ring: var(--plum-11);
+  --selection: var(--plum-4);
+}
+
+[data-accent="bronze"] {
+  --primary: var(--bronze-11);
+  --accent: var(--bronze-9);
+  --ring: var(--bronze-11);
+  --selection: var(--bronze-4);
+}
+
+[data-accent="gold"] {
+  --primary: var(--gold-11);
+  --accent: var(--gold-9);
+  --ring: var(--gold-11);
+  --selection: var(--gold-4);
+}
+
+/* Tomato sits next to the fixed danger red on purpose-of-choice only: it is
+ * available, but never the default, so "primary" and "destructive" don't read
+ * as the same colour out of the box. */
+[data-accent="tomato"] {
+  --primary: var(--tomato-11);
+  --accent: var(--tomato-9);
+  --ring: var(--tomato-11);
+  --selection: var(--tomato-4);
+}
+
+/* Monochrome — no chromatic accent. Follows the LIVE neutral (whichever the user
+ * picked) via the semantic neutral tokens rather than pinning one grey scale:
+ * --muted-fg is that neutral's step 11, --muted its step 3. */
+[data-accent="gray"] {
+  --primary: var(--muted-fg);
+  --accent: var(--muted-fg);
+  --ring: var(--muted-fg);
+  --selection: var(--muted);
+}

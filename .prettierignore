@@ -1,0 +1,13 @@
+dist
+node_modules
+src-tauri/target
+src-tauri/gen
+playwright-report
+test-results
+blob-report
+bun.lock
+*.md
+THIRD-PARTY-NOTICES
+
+src-tauri
+about.hbs

@@ -1,0 +1,160 @@
+/* cmdk command palette — styled to the project's design tokens. */
+
+/* Input row. */
+.cmdk-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+[cmdk-input] {
+  width: 100%;
+  padding: 0.75rem 0;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font-size: 0.875rem;
+  outline: none;
+}
+
+[cmdk-list] {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.5rem;
+  /* Smoothly track height to the result count; reduced-motion reset zeroes it. */
+  scroll-padding-block: 0.5rem;
+}
+
+[cmdk-group-heading] {
+  padding: 0.5rem 0.5rem 0.25rem;
+  color: var(--muted-fg);
+  font-size: 0.75rem;
+  font-weight: 500;
+  /* Sentence case, no tracking — the project's Label token. DESIGN.md §3
+     forbids ALL CAPS / tracked-out eyebrows in chrome labels. */
+}
+
+[cmdk-item] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  color: var(--fg);
+  font-size: 0.875rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* The tint alone is 1.1:1 against the surface; the inset ring (step 11, the
+   Ring Rule) is what makes the option Enter will run visible (WCAG 1.4.11). */
+[cmdk-item][data-selected="true"] {
+  background: var(--muted);
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+
+[cmdk-item][aria-disabled="true"] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* A shortcut is machine data (DESIGN.md, "The Machine-Data Rule"): mono at label
+   size, so the accelerator column reads as keys rather than as prose. */
+.cmdk-hint {
+  margin-left: auto;
+  padding-left: 1rem;
+  color: var(--muted-fg);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  /* No opacity dimming: muted-fg already passes AA (5.93:1); 0.7 dropped it to
+     3.11:1 and the shortcut hint is the payload that most needs to be read. */
+  font-variant-ligatures: none;
+  font-variant-numeric: tabular-nums;
+}
+
+[cmdk-empty] {
+  padding: 1rem;
+  color: var(--muted-fg);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* Keyboard legend — the palette's only inline help; honest, no overclaimed
+   "scope" syntax. muted-fg at full strength keeps it ≥4.5:1. */
+.cmdk-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted-fg);
+  font-size: 0.75rem;
+}
+
+.cmdk-footer-end {
+  margin-left: auto;
+}
+
+.cmdk-footer kbd {
+  display: inline-block;
+  min-width: 1.25rem;
+  padding: 0.0625rem 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 0.75rem; /* the data size (DESIGN.md §3) */
+  font-variant-ligatures: none;
+  text-align: center;
+}
+
+/* Async file-list loading: skeleton rows, not a spinner. */
+[cmdk-loading] {
+  display: block;
+  padding: 0.25rem 0.5rem;
+}
+
+/*
+ * A caveat about the list above it — not a row you can pick. Sits inside the
+ * group so cmdk hides it along with the group when nothing matches the query.
+ */
+.cmdk-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem 0.375rem;
+  color: var(--muted-fg);
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.cmdk-skeleton {
+  height: 0.875rem;
+  margin: 0.5rem 0;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--muted) 25%, var(--surface) 50%, var(--muted) 75%);
+  background-size: 200% 100%;
+  animation: cmdk-shimmer 1.2s var(--ease-snappy) infinite;
+}
+
+@keyframes cmdk-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmdk-skeleton {
+    animation: none;
+    background: var(--muted);
+  }
+}

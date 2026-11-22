@@ -1,0 +1,21 @@
+# CLAUDE.local.md — personal preferences (example)
+
+Copy this file to `CLAUDE.local.md` in the repository root and edit it. Claude Code
+loads `CLAUDE.local.md` next to `CLAUDE.md`; it is git-ignored, so what you write
+here stays on your machine. Note that a git-ignored file exists only in the checkout
+(or worktree) where you created it: to share the same preferences across worktrees,
+keep them in a file under your home directory and import it from here, e.g.
+`@~/.claude/asterisco-instructions.md`.
+
+Personal agent permissions belong in `.claude/settings.local.json` (also git-ignored),
+not in a tracked file.
+
+## Examples
+
+- Answer me in Italian (chat answers, explanations, questions). Code, comments,
+  commits and pull requests stay in English, as `CLAUDE.md` requires.
+- Ask me before adding any dependency, changing the architecture or doing anything
+  irreversible; one question at a time.
+- I coordinate several sessions as described in `docs/regia.md`: read it before
+  starting a slice, record my decisions with their date, and mark new user-facing
+  strings "da approvare" until I approve them.
