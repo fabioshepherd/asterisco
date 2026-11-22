@@ -51,6 +51,7 @@ Ogni brief contiene:
   la fetta è finita: così il job lungo `bundle` gira una volta sola.
 - Le run superate sulla stessa PR si cancellano da sole; quelle su `main` no.
   Il job `rust` gira sulle PR solo se cambiano `src-tauri/` o i workflow.
+- Le PR di sola documentazione (`.md` nella radice, `.md` e immagini in `docs/`, `THIRD-PARTY-NOTICES`) saltano `frontend`, `e2e`, `rust` e `bundle`.
 - Dopo un push, **controllare l'esito della CI ogni 10–15 minuti** finché non è
   finita. I promemoria che una sessione si programma da sola possono non partire
   (la sessione è occupata, chiusa o scaduta; i limiti d'uso possono rimandarli):

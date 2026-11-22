@@ -27,10 +27,49 @@ permissions:
   contents: read
 
 jobs:
+  # Decides whether `bundle` runs: it is skipped on a pull request whose changed
+  # files are all documentation. Same rule and DOCS_ONLY list as the `changes`
+  # job in ci.yml (see the comment there); keep the two in sync.
+  changes:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    outputs:
+      docs_only: ${{ steps.diff.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: diff
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          DOCS_ONLY: '^([^/]+\.md|docs/([^/]+/)*[^/]+\.(md|svg|png|jpe?g|gif|webp)|THIRD-PARTY-NOTICES)$'
+        run: |
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          files=$(git diff --name-only --no-renames "origin/$BASE_REF...HEAD")
+          # Indented so a file name cannot be read as a workflow command (::...).
+          echo "Changed files:"
+          sed 's/^/  /' <<< "$files"
+          if [ -n "$files" ] && ! grep -qvE "$DOCS_ONLY" <<< "$files"; then
+            echo "docs_only=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"
+          fi
+
   bundle:
+    needs: changes
     # Skipped (reported as success) on draft pull requests; a draft cannot be
     # merged, and the bundle runs once the pull request is ready for review.
-    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    # Also skipped on docs-only pull requests. Fail-safe: if `changes` fails its
+    # output is empty and the bundle still runs.
+    if: >-
+      ${{ !cancelled()
+      && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
+      && needs.changes.outputs.docs_only != 'true' }}
     runs-on: ubuntu-22.04
     timeout-minutes: 40
     steps:

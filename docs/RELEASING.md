@@ -217,7 +217,8 @@ bun run version:set 1.0.0 2026-06-07   # <semver> <YYYY-MM-DD>
 
 This also converts the `## [Unreleased]` changelog heading into
 `## [1.0.0] — 2026-06-07` (omit the date to leave `[Unreleased]` intact and just
-get a reminder). The repo currently sits at `0.5.1`; the `1.0.0` bump is run on
+get a reminder). The repo currently sits at `1.0.0-rc.1`, the release candidate
+tagged as `app-v1.0.0-rc.1` for the platform smoke test; the `1.0.0` bump is run on
 the day of the tag, with that day's date. The 1.0.0 release
 notes are already drafted under `## [Unreleased]` in `CHANGELOG.md`; at release,
 also drop the "pre-1.0 development releases" note at the top of the changelog.

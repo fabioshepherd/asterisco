@@ -19,7 +19,7 @@ bundled Chromium.
 
 ## Status
 
-**0.5.1 — Phase 2, V1.0 done except the release gates.** Phase 0 (scaffold) and
+**1.0.0-rc.1 — Phase 2, V1.0 done except the release gates.** Phase 0 (scaffold) and
 Phase 1 (editing MVP) are done; the 1.0 notes are drafted in
 [CHANGELOG.md](./CHANGELOG.md). A tagged release builds **macOS (Apple Silicon + Intel), Windows
 and Linux**; the macOS bundles are **unsigned** for now, so Gatekeeper warns on
