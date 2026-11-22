@@ -121,6 +121,38 @@ jobs:
           cargo install --locked --features cli cargo-about@0.9.3
           bun run notices
 
+      # macOS code signing + notarization, gated behind the repository
+      # variable ENABLE_MAC_SIGNING ('true' to sign). Tauri imports a
+      # certificate whenever APPLE_CERTIFICATE and APPLE_CERTIFICATE_PASSWORD
+      # are *set*, even to an empty string (tauri-bundler 2.10.5,
+      # src/bundle/macos/sign.rs: `var_os(..)`), so an unsigned build must not
+      # define them at all — passing `''` from the build step's `env:` made
+      # app-v1.0.0-rc.1 fail with "SecKeychainItemImport: Unable to decode the
+      # provided data". This step exports them to the job only when signing is
+      # on; all Apple values travel together.
+      - name: Enable macOS signing
+        if: runner.os == 'macOS' && vars.ENABLE_MAC_SIGNING == 'true'
+        shell: bash
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          set -euo pipefail
+          for name in APPLE_CERTIFICATE APPLE_CERTIFICATE_PASSWORD APPLE_SIGNING_IDENTITY \
+                      APPLE_ID APPLE_PASSWORD APPLE_TEAM_ID KEYCHAIN_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::ENABLE_MAC_SIGNING is true but the secret $name is empty"
+              exit 1
+            fi
+            delimiter="EOF_$(openssl rand -hex 16)"
+            { echo "$name<<$delimiter"; printf '%s\n' "${!name}"; echo "$delimiter"; } >> "$GITHUB_ENV"
+          done
+
       - name: Build, sign and release
         id: tauri
         uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0.6.2
@@ -129,17 +161,8 @@ jobs:
           # Updater signing (required for createUpdaterArtifacts) — set these.
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-          # macOS code signing + notarization (gated — unsigned until the repo
-          # variable ENABLE_MAC_SIGNING is set to 'true'). All Apple vars are
-          # gated together: a present identity with an empty certificate would
-          # still make Tauri attempt (and fail) signing on a keychain-less runner.
-          APPLE_CERTIFICATE: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.APPLE_CERTIFICATE || '' }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.APPLE_CERTIFICATE_PASSWORD || '' }}
-          APPLE_SIGNING_IDENTITY: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.APPLE_SIGNING_IDENTITY || '' }}
-          APPLE_ID: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.APPLE_ID || '' }}
-          APPLE_PASSWORD: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.APPLE_PASSWORD || '' }}
-          APPLE_TEAM_ID: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.APPLE_TEAM_ID || '' }}
-          KEYCHAIN_PASSWORD: ${{ vars.ENABLE_MAC_SIGNING == 'true' && secrets.KEYCHAIN_PASSWORD || '' }}
+          # macOS code signing + notarization: the Apple variables come from the
+          # "Enable macOS signing" step above, and only when it runs.
           # Windows Azure Trusted Signing (optional — unsigned if unset).
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
