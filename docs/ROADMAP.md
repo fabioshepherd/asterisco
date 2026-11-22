@@ -28,7 +28,7 @@ Priorities: **[Core]** shipped in the MVP · **[V1]** required for 1.0 ·
 |---|---|---|
 | 0 — Scaffold | Tauri 2 + React + TS + Vite, design tokens and theming, base Rust fs commands, persisted window state, native menus, i18n | **done** |
 | 1 — MVP | Seamless WYSIWYG, full GFM, code blocks, tables, open/save, auto-save, file watcher, command palette, find & replace, word count, HTML export and print, file tree, tabs | **done** |
-| 2 — V1.0 | Everything below under "Remaining for 1.0" | **done**; the last release gate, the device smoke test of `app-v1.0.0-rc.1`, runs before the `app-v1.0.0` tag |
+| 2 — V1.0 | Everything below under "Remaining for 1.0" | **done** — released as 1.0.0 on 2026-11-22 |
 | 3 — Plus | Slash commands, snippets, multi-cursor, sessions and pins, advanced statistics, visual theme editor, Pandoc, image assistant, light Git integration, Vim mode | not started |
 | 4 — Future | Opt-in AI assistant, real-time collaboration (Yjs), wiki-links and backlinks, plugin system, mobile builds | not started |
 
@@ -37,6 +37,8 @@ Phase 4 items are **not shipped and must never be described as present**.
 ---
 
 ## Remaining for 1.0
+
+**1.0.0 was released on 2026-11-22; every release gate below is closed.**
 
 Verified against the tree on 2026-08-17; atomic saves landed the same day.
 Re-checked on 2026-11-19 at the close of the 1.0 consolidation
@@ -63,12 +65,12 @@ themselves were never closed, so they are restated here and live here now.
   by a ruleset (pull requests only, required checks `frontend`, `e2e`, `rust`,
   `bundle`). See `docs/release-1.0.md` and
   `docs/superpowers/specs/2026-11-20-public-repo-design.md`.
-- **[V1] Smoke-test a real release on each platform.** Decided 2026-08-17:
-  macOS ships unsigned, so the matrix now builds all five declared bundle
-  targets across four jobs and nothing in `tauri.conf.json` goes unbuilt. What
-  is untested is the output. `app-v1.0.0-rc.1` was cut on 2026-11-22 for this:
-  run the device checklist in `docs/release-1.0.md` on its bundles before
-  tagging `app-v1.0.0`.
+- **[V1] Smoke-test a real release on each platform — closed 2026-11-22.**
+  Decided 2026-08-17: macOS ships unsigned, so the matrix builds all five
+  declared bundle targets across four jobs. The device checklist in
+  `docs/release-1.0.md` ran on the `app-v1.0.0-rc.1` bundles, and once
+  `app-v1.0.0` was published the rc.1 build updated itself to 1.0.0 through
+  the in-app updater, which proves the signing key, the feed and the endpoint.
 
 ### Quality gates
 
