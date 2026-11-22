@@ -1,5 +1,7 @@
 # Asterisco
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/fabioshepherd/asterisco/badge)](https://scorecard.dev/viewer/?uri=github.com/fabioshepherd/asterisco)
+
 > A native, cross-platform, **local-first** Markdown
 > editor for the files a codebase is made of.
 > **Free and open source** — [MIT](./LICENSE).

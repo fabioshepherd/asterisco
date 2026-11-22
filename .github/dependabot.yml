@@ -14,6 +14,33 @@ updates:
     groups:
       npm-minor-patch:
         update-types: [minor, patch]
+    # Majors deferred to after 1.0 (CODE-09 "later"; mermaid 12 and
+    # @types/node > 22 never for 1.0): docs/consolidation/w3-decisions.md
+    ignore:
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: mermaid
+        update-types: ["version-update:semver-major"]
+      - dependency-name: i18next
+        update-types: ["version-update:semver-major"]
+      - dependency-name: react-i18next
+        update-types: ["version-update:semver-major"]
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: eslint-plugin-react-hooks
+        update-types: ["version-update:semver-major"]
+      - dependency-name: jsdom
+        update-types: ["version-update:semver-major"]
+      - dependency-name: jest-axe
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@testing-library/jest-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: vitest
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: cargo
     directory: /src-tauri
