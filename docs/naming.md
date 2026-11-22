@@ -401,3 +401,5 @@ temporanea (non nel repository):
 - **Ricerca web** per nome, insieme a "markdown", "editor", "app" e "trademark". Le fonti
   sono citate accanto a ogni risultato.
 - **Il metodo:** quello già usato per il nome di «Dica» (vedi "Il metodo").
+
+<!-- CI docs-only proof (throwaway, never merged). -->
