@@ -115,8 +115,13 @@ past the first-open warning. The text to paste is in
   → Privacy & Security and clicks **Open Anyway**. If macOS instead says the app
   "is damaged and can't be opened", that dialog has no Open Anyway: the way
   through is removing the quarantine attribute,
-  `xattr -dr com.apple.quarantine /Applications/Asterisco.app`. Which of the two
-  dialogs an unsigned build triggers is checked in the platform smoke test.
+  `xattr -dr com.apple.quarantine /Applications/Asterisco.app`. The first
+  `app-v1.0.0-rc.1` build, with no signature at all, got the "damaged" dialog.
+  Since then `bundle.macOS.signingIdentity` is `"-"`, so builds without a
+  Developer ID are **ad-hoc signed** — a valid signature with no identity —
+  which is meant to turn "damaged" into the Open Anyway path; the smoke test of
+  the next candidate confirms which dialog users get. A Developer ID set
+  through `APPLE_SIGNING_IDENTITY` (step 3) overrides the `"-"`.
 - **macOS 14 and earlier.** Control-click (or right-click) the app → Open, then
   Open in the dialog.
 - **Windows.** SmartScreen shows "Windows protected your PC": More info → Run
