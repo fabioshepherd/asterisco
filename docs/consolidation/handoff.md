@@ -1,4 +1,4 @@
-# Coordinator handoff — 2026-11-20
+# Coordinator handoff — 2026-11-22
 
 > **Historical record**, updated for publication on 2026-11-20. It was written in
 > the project's previous repository, now kept as a private archive: commit
@@ -6,7 +6,68 @@
 > current plan is [`docs/release-1.0.md`](../release-1.0.md); the public-repository
 > design is [`docs/superpowers/specs/2026-11-20-public-repo-design.md`](../superpowers/specs/2026-11-20-public-repo-design.md).
 
-## Release 1.0 — state on 2026-11-20 (read this first)
+## Release 1.0 — state on 2026-11-22 (read this first)
+
+This section refers to the **public repository** `fabioshepherd/asterisco`; PR numbers
+here are its own (#1 onwards). Older sections below refer to the archive.
+
+**Done (2026-11-20 → 2026-11-22):**
+- Cleanup in the old repository: code (#22), documents (#24), open-source setup (#23),
+  merged after an expert review and the owner's smoke test.
+- Old repository renamed `fabioshepherd/asterisco-archivio` (private; full history, old
+  releases, unmerged branches `develop`, `claude/riadattamento-*`, `docs/site-design`).
+- New `fabioshepherd/asterisco`: one commit `4703d68` with the exact tree of the archive's
+  `main` (`0398cb3`), author on the owner's GitHub noreply address; public since
+  2026-11-22.
+- Settings applied and read back: ruleset `main` (PR only; required checks `frontend`,
+  `e2e`, `rust`, `bundle`; no force-push or deletion; no bypass; no review approval
+  required, so the owner can merge their own PRs), private vulnerability reporting,
+  secret scanning with push protection, Dependabot alerts and security updates, CodeQL
+  default setup off (advanced `codeql.yml`), workflow token read-only and no PR approval
+  by Actions, Issues on, Wiki/Discussions/Projects off, branches deleted after merge,
+  topics. Secret `TAURI_SIGNING_PRIVATE_KEY` uploaded by the owner (same key, id
+  `7E06AE5B898C6E12`, no password).
+- #7: Dependabot ignores semver-major updates deferred to after 1.0 (CODE-09) and the
+  OpenSSF Scorecard badge. Full CI green on the new repository, `bundle` and CodeQL
+  included; Scorecard first runs on that merge. Deferred Dependabot PRs #3–#6 closed.
+- Local folders: `~/Progetti/asterisco` is a fresh clone of the public repository;
+  the old checkout lives in `~/Progetti/asterisco-archivio`.
+
+**Owner decisions 2026-11-20/22** (also in `docs/release-1.0.md`): everything public
+once cleaned; reporting contact GitHub only (no email; the Code of Conduct points to the
+owner's profile, accepting that GitHub has no private messages); approach A (clean, then
+copy as one commit); contributor texts of #23 approved; 1.0 date = the tag day.
+
+**Open, owner:**
+- install the Claude GitHub App on the new repository;
+- move the site documents from the archive branch `docs/site-design` to
+  `fabioshepherd/asterisco-site`;
+- personal preferences in `CLAUDE.local.md` or `~/.claude/CLAUDE.md` (e.g. reply in
+  Italian), local permissions in `.claude/settings.local.json` (already copied).
+
+**Open, later (not blocking 1.0):** Dependabot #1 (actions group) and #2 (npm
+minor/patch group); two moderate Dependabot alerts (vitest, fixed by a patch release
+Dependabot will propose; glib via Tauri); the major-version ignores also block majors
+the owner did not decide on (e.g. jsdom 26–30, react-hooks 6) — narrow them with
+`versions` if wanted.
+
+**Remaining for 1.0, in order** (`docs/release-1.0.md`, actions 6–8):
+1. on the tag day (the owner says so): `bun run version:set 1.0.0 <date>` +
+   `src-tauri/Cargo.lock`, drop the "pre-1.0" note in `CHANGELOG.md`, in a PR; owner
+   smoke test, then merge;
+2. owner's explicit ok → tag `app-v1.0.0`; the first release run on the new repository
+   builds macOS, Windows and Linux, signs the updater artifacts, attests the packages and
+   creates a **draft** release;
+3. device checks on the draft's packages (two-column list in `docs/release-1.0.md`), one
+   pass in Italian and one in English;
+4. the owner publishes the release; the site goes live with 1.0.
+
+**Practical notes:** commits use the noreply address (set `user.email` per clone);
+`gh pr checks` may list a skipped `bundle` row from the draft state next to the passing
+one — read the check runs of the head commit; the `rust` job may time out on the Ubuntu
+apt mirror ("Install Linux dependencies" > 10 min): infrastructure, one re-run.
+
+## Release 1.0 — state on 2026-11-20
 
 The consolidation is closed (below). Since then, with the owner:
 
