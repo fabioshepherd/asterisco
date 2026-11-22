@@ -81,7 +81,7 @@
     "eslint-plugin-react-refresh": "^0.5.8",
     "generate-license-file": "^4.2.5",
     "globals": "^17.14.0",
-    "jest-axe": "^10.0.0",
+    "jest-axe": "^11.0.0",
     "jsdom": "^25",
     "prettier": "^3.10.1",
     "tailwindcss": "4.3.5",
