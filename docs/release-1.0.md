@@ -160,9 +160,13 @@ dove serve a capire la storia (e, di proposito, nel progetto
 ## Firma macOS e Windows
 
 Decisione già presa (2026-08-17, `docs/ROADMAP.md`; `docs/RELEASING.md` punti 3–4):
-la 1.0 esce **non firmata**. Su macOS Gatekeeper avvisa al primo avvio (tasto
-destro → Apri, oppure `xattr -dr com.apple.quarantine`); su Windows compare
-l'avviso SmartScreen. Il workflow firma da solo quando i segreti ci sono; senza,
+la 1.0 esce **non firmata**. Su macOS Gatekeeper blocca il primo avvio: da
+macOS 15 il tasto destro → Apri non basta più, serve Impostazioni di Sistema →
+Privacy e sicurezza → «Apri comunque» (oppure `xattr -dr com.apple.quarantine`
+se macOS dice che l'app è danneggiata); su Windows compare l'avviso SmartScreen.
+Le istruzioni per gli utenti vanno nelle note della release
+(`docs/release-notes.md`); i passi per attivare la firma sono in
+`docs/RELEASING.md`, punto 3. Il workflow firma da solo quando i segreti ci sono; senza,
 produce bundle non firmati. Nulla da fare per la 1.0.
 
 ## Suite manuale
@@ -186,7 +190,7 @@ ogni voce che non va prima del tag.
 
 | Cosa fare | Cosa deve succedere |
 |---|---|
-| macOS: aprire il `.dmg`, trascinare l'app in Applicazioni, avviarla | Gatekeeper avvisa (app non firmata); con tasto destro → Apri l'app parte |
+| macOS: aprire il `.dmg`, trascinare l'app in Applicazioni, avviarla | Gatekeeper blocca (app non firmata). Annotare **quale** messaggio compare: con «sviluppatore non verificato» l'app parte da Privacy e sicurezza → «Apri comunque» (macOS 15+) o tasto destro → Apri (macOS 14 e precedenti); con «l'app è danneggiata» parte solo dopo `xattr -dr com.apple.quarantine /Applications/Asterisco.app`. Su Apple Silicon e su Intel |
 | Windows: eseguire l'installer NSIS | SmartScreen avvisa; "Esegui comunque" installa e avvia l'app |
 | Linux: installare il `.deb` e avviare l'AppImage | entrambi si avviano |
 | Doppio clic su un file `.md` nel file manager | l'app si apre (o è proposta) e mostra il file |
